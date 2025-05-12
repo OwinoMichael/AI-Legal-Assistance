@@ -2,6 +2,8 @@ package com.legal.demo.domain.legalcase;
 
 import com.legal.demo.domain.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,8 +16,10 @@ public class Case {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "Title is required")
     private Integer id;
 
+    @NotBlank(message = "Title is required")
     @Column(name = "title")
     private String title;
 

@@ -2,10 +2,10 @@ package com.legal.demo.application.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class ResourceNotValid extends CustomBaseException{
+public class ResourceNotValidException extends CustomBaseException{
 
 
-    public ResourceNotValid(String resourceName){
+    public ResourceNotValidException(String resourceName){
         super(HttpStatus.BAD_REQUEST, new ErrorResponse("Invalid" + resourceName, HttpStatus.BAD_REQUEST.toString()));
     }
 }

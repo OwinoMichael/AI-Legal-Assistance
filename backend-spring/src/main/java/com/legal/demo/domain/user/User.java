@@ -1,6 +1,9 @@
 package com.legal.demo.domain.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -14,12 +17,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2-50 characters")
     @Column(name = "first_name")
     private String firstName;
 
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50, message = "Last name must be between 2-50 characters")
     @Column(name = "last_name")
     private String lastName;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Please provide a valid email address")
     @Column(name = "email")
     private String email;
 

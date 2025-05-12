@@ -1,43 +1,47 @@
 package com.legal.demo.application.exceptions;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
 public class ErrorResponse {
+    private final String message;
+    private final String errorCode;
+    private final String timeStamp;
+    private final Object details;
 
-    private String message;
-    private String errorCode;
-    private String timeStamp;
-
-    public ErrorResponse(String message) {
-        this.message = message;
-        this.timeStamp = java.time.Instant.now().toString();
+    // Constructor for simple message + error code
+    public ErrorResponse(String message, String errorCode) {
+        this(message, errorCode, null);
     }
 
-    public ErrorResponse(String message, String errorCode){
+    // Constructor for message + details (Map)
+    public ErrorResponse(String message, Map<String, ?> details) {
+        this(message, "VALIDATION_ERROR", details);
+    }
+
+    // Full constructor
+    public ErrorResponse(String message, String errorCode, Object details) {
         this.message = message;
         this.errorCode = errorCode;
-        this.timeStamp = java.time.Instant.now().toString();
+        this.timeStamp = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
+        this.details = details;
     }
 
+    // Getters
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public String getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
     public String getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public Object getDetails() {
+        return details;
     }
 }
