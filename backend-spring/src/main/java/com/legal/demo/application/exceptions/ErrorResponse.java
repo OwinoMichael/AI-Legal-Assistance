@@ -10,6 +10,7 @@ public class ErrorResponse {
     private final String timeStamp;
     private final Object details;
 
+
     // Constructor for simple message + error code
     public ErrorResponse(String message, String errorCode) {
         this(message, errorCode, null);

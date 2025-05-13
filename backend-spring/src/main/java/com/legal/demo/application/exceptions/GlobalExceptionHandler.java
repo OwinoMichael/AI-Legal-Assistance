@@ -35,10 +35,10 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse("Validation failed", errors));
     }
 
-    //    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<SimpleResponse> handleGeneralExceptions(Exception exception){
-//        SimpleResponse response = new SimpleResponse("Something went wrong. Please try again.");
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-//    }
+        @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralExceptions(Exception exception){
+        ErrorResponse response = new ErrorResponse("Something went wrong. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
 
 }

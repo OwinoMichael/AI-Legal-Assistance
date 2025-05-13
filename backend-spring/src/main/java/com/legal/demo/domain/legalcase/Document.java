@@ -1,6 +1,8 @@
 package com.legal.demo.domain.legalcase;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -13,8 +15,20 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Size(min = 2, max = 50, message = "File name must be between 2-50 characters")
+    @NotBlank(message = "File name required")
     @Column(name = "file_name")
     private String fileName;
+
+    @Column(name = "file_path")
+    @NotBlank(message = "File path required")
+    private String filePath;
+
+    @Column(name = "file_size")
+    private Long fileSize;
+
+    @Column(name = "file_type")
+    private String fileType;
 
     @Column(name = "created_at")
     private LocalDate createdAt;
@@ -29,12 +43,37 @@ public class Document {
     public Document() {
     }
 
-    public Document(Integer id, String fileName, LocalDate createdAt, LocalDate updatedAt, Case legalCase) {
+    public Document(Integer id, String fileName, String filePath, LocalDate createdAt, LocalDate updatedAt, Case legalCase) {
         this.id = id;
         this.fileName = fileName;
+        this.filePath = filePath;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.legalCase = legalCase;
+    }
+
+    public Long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public Case getLegalCase() {
