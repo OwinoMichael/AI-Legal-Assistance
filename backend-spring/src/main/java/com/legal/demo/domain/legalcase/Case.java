@@ -15,7 +15,6 @@ import java.util.Objects;
 public class Case {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull(message = "Title is required")
     private Integer id;
 

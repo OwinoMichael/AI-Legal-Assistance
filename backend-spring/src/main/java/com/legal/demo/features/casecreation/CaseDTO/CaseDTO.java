@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class CaseDTO {
     @NotBlank(message = "Title is required")
@@ -12,12 +13,12 @@ public class CaseDTO {
     private String description;
 
     @NotNull(message = "User ID is required")
-    private Integer userId;
+    private UUID userId;
 
     public CaseDTO() {
     }
 
-    public CaseDTO(String title, String description, Integer userId) {
+    public CaseDTO(String title, String description, UUID userId) {
         this.title = title;
         this.description = description;
         this.userId = userId;
@@ -39,11 +40,13 @@ public class CaseDTO {
         this.description = description;
     }
 
-    public @NotNull(message = "User ID is required") Integer getUserId() {
+
+
+    public @NotNull(message = "User ID is required") UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(@NotNull(message = "User ID is required") Integer userId) {
+    public void setUserId(@NotNull(message = "User ID is required") UUID userId) {
         this.userId = userId;
     }
 }

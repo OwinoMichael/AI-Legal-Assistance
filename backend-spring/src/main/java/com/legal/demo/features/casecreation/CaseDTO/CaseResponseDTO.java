@@ -1,18 +1,19 @@
 package com.legal.demo.features.casecreation.CaseDTO;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class CaseResponseDTO {
     private Integer id;
     private String title;
     private String description;
     private LocalDate createdAt;
-    private Integer userId;
+    private UUID userId;
 
     public CaseResponseDTO() {
     }
 
-    public CaseResponseDTO(Integer id, String title, String description, LocalDate createdAt, Integer userId) {
+    public CaseResponseDTO(Integer id, String title, String description, LocalDate createdAt, UUID userId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -52,11 +53,11 @@ public class CaseResponseDTO {
         this.createdAt = createdAt;
     }
 
-    public Integer getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 }

@@ -10,6 +10,8 @@ import com.legal.demo.features.casecreation.CaseRepository;
 import com.legal.demo.features.documentupload.DocumentDTO.DocumentResponseDTO;
 import com.legal.demo.features.documentupload.DocumentDTO.DocumentUploadDTO;
 import com.legal.demo.features.documentupload.DocumentRepository;
+
+import com.legal.demo.features.summary.commandhandler.SummaryAsyncService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,16 @@ public class UploadDocument implements Command<DocumentUploadDTO, DocumentRespon
     private final CaseRepository caseRepository;
     private final FileStorageService fileStorageService;
 
+    private final SummaryAsyncService summaryService;
+
     public UploadDocument(DocumentRepository documentRepository,
                           CaseRepository caseRepository,
-                          FileStorageService fileStorageService) {
+                          FileStorageService fileStorageService,
+                          SummaryAsyncService summaryService) {
         this.documentRepository = documentRepository;
         this.caseRepository = caseRepository;
         this.fileStorageService = fileStorageService;
+        this.summaryService = summaryService;
     }
 
     @Override
@@ -51,6 +57,9 @@ public class UploadDocument implements Command<DocumentUploadDTO, DocumentRespon
             document.setLegalCase(legalCase);
 
             Document savedDocument = documentRepository.save(document);
+
+            // 🔥 Trigger summarization
+            summaryService.generateSummaryAsync(savedDocument.getId());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponseDTO(savedDocument));
 
