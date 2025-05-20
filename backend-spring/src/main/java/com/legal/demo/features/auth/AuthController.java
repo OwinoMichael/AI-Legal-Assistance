@@ -1,52 +1,50 @@
 package com.legal.demo.features.auth;
 
-import com.legal.demo.application.security.SecurityConfig;
 import com.legal.demo.domain.user.User;
-import com.legal.demo.features.auth.service.LoginService;
-import com.legal.demo.features.auth.service.RegistrationService;
-import com.legal.demo.features.users.UserRepository;
+import com.legal.demo.features.auth.models.ResendVerificationRequest;
+import com.legal.demo.features.auth.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tika.exception.TikaException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
 
 @RestController
-
+@RequestMapping("/auth")
 public class AuthController {
 
     private final RegistrationService registrationService;
-    private final LoginService loginService;
+    private final EmailVerificationService emailVerificationService;
+    private final ResendEmailVerificationService resendEmailVerificationService;
 
-    public AuthController(RegistrationService registrationService, LoginService loginService) {
+    public AuthController(RegistrationService registrationService, EmailVerificationService emailVerificationService, ResendEmailVerificationService resendEmailVerificationService) {
         this.registrationService = registrationService;
-        this.loginService = loginService;
+        this.emailVerificationService = emailVerificationService;
+        this.resendEmailVerificationService = resendEmailVerificationService;
+
     }
 
-    @PostMapping("/login")
-        public ResponseEntity login(@RequestBody LoginRequest request) throws TikaException, IOException, SAXException {
+    @PostMapping("/createNewUser")
+    public ResponseEntity createNewUser(@RequestBody User request) throws TikaException, IOException, SAXException {
 
-            return loginService.execute(request);
+        return registrationService.execute(request);
+    }
 
-        }
 
-        @PostMapping("/createNewUser")
-        public ResponseEntity createNewUser(@RequestBody User request) throws TikaException, IOException, SAXException {
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyUser(@RequestParam String token) throws TikaException, IOException, SAXException {
+        return emailVerificationService.execute(token);
+    }
 
-            return registrationService.execute(request);
-        }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<String> resendVerification(@RequestBody ResendVerificationRequest request,
+                                                     HttpServletRequest httpRequest) throws TikaException, IOException, SAXException {
+        ResendVerificationContext context = new ResendVerificationContext(request, httpRequest);
+
+        return resendEmailVerificationService.execute(context);
+    }
 
 }

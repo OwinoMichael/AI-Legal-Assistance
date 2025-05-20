@@ -1,10 +1,10 @@
 package com.legal.demo.features.auth.service;
 
 import com.legal.demo.Command;
-import com.legal.demo.application.security.SecurityConfig;
+import com.legal.demo.application.security.JWTUtil;
 import com.legal.demo.domain.user.User;
-import com.legal.demo.features.auth.JWTLoginResponse;
-import com.legal.demo.features.auth.LoginRequest;
+import com.legal.demo.features.auth.models.JWTLoginResponse;
+import com.legal.demo.features.auth.models.LoginRequest;
 import com.legal.demo.features.users.UserRepository;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.tika.exception.TikaException;
@@ -49,7 +49,7 @@ public class LoginService implements Command<LoginRequest, T> {
             User user = usersRepository.findUsersByEmail(request.getEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            String jwtToken = SecurityConfig.JWTUtil.generateToken(request.getEmail());
+            String jwtToken = JWTUtil.generateToken(request.getEmail());
             return ResponseEntity.ok(new JWTLoginResponse(jwtToken, user.getEmail()));
 
 

@@ -42,6 +42,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(nullable = false)
+    private boolean enabled = false; // Default to false until verified
+
     @Column(name = "created_at")
     private LocalDate createdAt;
 
@@ -51,12 +54,13 @@ public class User {
     public User() {
     }
 
-    public User(UUID id, String firstName, String lastName, String email, String password, LocalDate createdAt, LocalDate updatedAt) {
+    public User(UUID id, String firstName, String lastName, String email, String password, boolean enabled, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.enabled = enabled;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -69,6 +73,14 @@ public class User {
     public void setPassword(@NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
             message = "Password must contain at least one digit, one lowercase, one uppercase, one special character, and no whitespace") String password) {
         this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public UUID getId() {

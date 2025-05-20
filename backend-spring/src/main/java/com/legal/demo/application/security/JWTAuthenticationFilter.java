@@ -26,8 +26,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         //validate token
-        if(token != null && SecurityConfig.JWTUtil.validateToken(token)){
-            String username = SecurityConfig.JWTUtil.extractUsername(token);
+        if(token != null && JWTUtil.validateToken(token)){
+            String username = JWTUtil.extractUsername(token);
 
             //put our validated username into our security context holder
             Authentication auth = new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());

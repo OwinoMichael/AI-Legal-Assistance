@@ -1,4 +1,4 @@
-package com.legal.demo.features.auth;
+package com.legal.demo.features.auth.models;
 
 public class JWTLoginResponse {
     private String token;

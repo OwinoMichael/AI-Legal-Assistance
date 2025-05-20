@@ -41,7 +41,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean
@@ -58,7 +58,7 @@ public class SecurityConfig {
                 }))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login", "/createNewUser").permitAll();
+                    auth.requestMatchers("auth/login", "auth/createNewUser", "auth/verify").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -71,38 +71,5 @@ public class SecurityConfig {
         return new JWTAuthenticationFilter();
     }
 
-    public static class JWTUtil {
-        private static final SecretKey KEY = Jwts.SIG.HS512.key().build();
-        private static final long EXP_TIME_10_DAYS = 864_000_000;
 
-        public static String generateToken(String username) {
-            return Jwts.builder()
-                    .subject(username)
-                    .expiration(new Date(System.currentTimeMillis() + EXP_TIME_10_DAYS))
-                    .signWith(KEY, Jwts.SIG.HS512)
-                    .compact();
-        }
-
-        public static String extractUsername(String token) {
-            return Jwts.parser()
-                    .verifyWith(KEY)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getSubject();
-        }
-
-        public static Boolean validateToken(String token) {
-            try {
-                Jwts.parser()
-                        .verifyWith(KEY)
-                        .build()
-                        .parseSignedClaims(token);
-                return true;
-            } catch (Exception ex) {
-                System.out.println("Invalid token: " + ex.getMessage());
-                return false;
-            }
-        }
-    }
 }
