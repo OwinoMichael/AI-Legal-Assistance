@@ -17,18 +17,20 @@ public class EmailVerificationService implements Command<String, String> {
 
 
     private final UserRepository userRepository;
+    private final JWTUtil jwtUtil;
 
-    public EmailVerificationService( UserRepository userRepository) {
+    public EmailVerificationService(UserRepository userRepository, JWTUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
     public ResponseEntity<String> execute(String token) throws TikaException, IOException, SAXException {
-        if (!JWTUtil.validateToken(token)) {
+        if (!jwtUtil.validateToken(token)) {
             return ResponseEntity.badRequest().body("Invalid or expired token");
         }
 
-        String email = JWTUtil.extractUsername(token);
+        String email = jwtUtil.extractUsername(token);
         User user = userRepository.findUsersByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

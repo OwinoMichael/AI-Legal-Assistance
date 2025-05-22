@@ -26,9 +26,11 @@ import java.util.Date;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final JWTUtil jwtUtil;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JWTUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Bean
@@ -68,7 +70,7 @@ public class SecurityConfig {
 
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter(){
-        return new JWTAuthenticationFilter();
+        return new JWTAuthenticationFilter(jwtUtil);
     }
 
 

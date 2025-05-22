@@ -26,11 +26,14 @@ public class RegistrationService implements Command<User, T> {
 
     private final UserRepository usersRepository;
     private final PasswordEncoder encoder;
+    private final JWTUtil jwtUtil;
     private final ApplicationEventPublisher eventPublisher;
 
-    public RegistrationService(UserRepository usersRepository, PasswordEncoder encoder, ApplicationEventPublisher eventPublisher) {
+
+    public RegistrationService(UserRepository usersRepository, PasswordEncoder encoder, JWTUtil jwtUtil, ApplicationEventPublisher eventPublisher) {
         this.usersRepository = usersRepository;
         this.encoder = encoder;
+        this.jwtUtil = jwtUtil;
         this.eventPublisher = eventPublisher;
     }
 
@@ -54,7 +57,7 @@ public class RegistrationService implements Command<User, T> {
         usersRepository.save(user);
 
         // Generate verification token
-        String verificationToken = JWTUtil.generateToken(user.getEmail());
+        String verificationToken = jwtUtil.generateToken(user.getEmail());
 
         // Publish event
         eventPublisher.publishEvent(new UserRegistrationEvent(user.getEmail(), verificationToken));

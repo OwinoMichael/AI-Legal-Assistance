@@ -22,12 +22,14 @@ import java.io.IOException;
 public class ResendEmailVerificationService implements Command<ResendVerificationContext, String> {
     private final UserRepository userRepository;
     private final RateLimitService rateLimitService;
+    private final JWTUtil jwtUtil;
     private final ApplicationEventPublisher eventPublisher;
 
 
-    public ResendEmailVerificationService(UserRepository userRepository, RateLimitService rateLimitService, ApplicationEventPublisher eventPublisher) {
+    public ResendEmailVerificationService(UserRepository userRepository, RateLimitService rateLimitService, JWTUtil jwtUtil, ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.rateLimitService = rateLimitService;
+        this.jwtUtil = jwtUtil;
         this.eventPublisher = eventPublisher;
 
     }
@@ -57,7 +59,7 @@ public class ResendEmailVerificationService implements Command<ResendVerificatio
         }
 
         // 3. Generate and send new token
-        String verificationToken = JWTUtil.generateToken(user.getEmail());
+        String verificationToken = jwtUtil.generateToken(user.getEmail());
         eventPublisher.publishEvent(new UserRegistrationEvent(
                 user.getEmail(),
                 verificationToken,

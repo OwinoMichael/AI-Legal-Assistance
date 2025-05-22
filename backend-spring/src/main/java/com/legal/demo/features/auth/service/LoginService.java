@@ -28,11 +28,13 @@ public class LoginService implements Command<LoginRequest, T> {
     private final AuthenticationManager authenticationManager;
     private final UserRepository usersRepository;
     private final PasswordEncoder encoder;
+    private final JWTUtil jwtUtil;
 
-    public LoginService(AuthenticationManager authenticationManager, UserRepository usersRepository, PasswordEncoder encoder) {
+    public LoginService(AuthenticationManager authenticationManager, UserRepository usersRepository, PasswordEncoder encoder, JWTUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.usersRepository = usersRepository;
         this.encoder = encoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class LoginService implements Command<LoginRequest, T> {
             User user = usersRepository.findUsersByEmail(request.getEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            String jwtToken = JWTUtil.generateToken(request.getEmail());
+            String jwtToken = jwtUtil.generateToken(request.getEmail());
             return ResponseEntity.ok(new JWTLoginResponse(jwtToken, user.getEmail()));
 
 

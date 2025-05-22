@@ -13,6 +13,14 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JWTUtil jwtUtil;
+
+    public JWTAuthenticationFilter(JWTUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //token will be sent in header
@@ -26,8 +34,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         //validate token
-        if(token != null && JWTUtil.validateToken(token)){
-            String username = JWTUtil.extractUsername(token);
+        if(token != null && jwtUtil.validateToken(token)){
+            String username = jwtUtil.extractUsername(token);
 
             //put our validated username into our security context holder
             Authentication auth = new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
