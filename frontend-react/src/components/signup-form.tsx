@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"; // Import icons from lucide-react
+import { createValidation, useFieldValidation, ValidationPresets } from "@/services/ValidationService";
 
 export function SignupForm({
   className,
@@ -14,46 +15,59 @@ export function SignupForm({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
-  // State for form values
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
+  const firstName = useFieldValidation(ValidationPresets.firstName);
+  const lastName = useFieldValidation(ValidationPresets.lastName);
+  const email = useFieldValidation(ValidationPresets.email);
+  const password = useFieldValidation(ValidationPresets.password);
   
   // State for password match validation
   const [passwordMatch, setPasswordMatch] = useState(true);
   
   // State for loading status
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-    
-    // Check if passwords match when either password field changes
-    if (id === "password" || id === "confirmPassword") {
-      if (id === "password") {
-        setPasswordMatch(value === formData.confirmPassword || formData.confirmPassword === "");
-      } else {
-        setPasswordMatch(value === formData.password);
-      }
+
+  // Custom validation for confirm password that checks matching
+    const confirmPassword = useFieldValidation(
+        createValidation({
+        required: true,
+        minLength: 8,
+        custom: (value) => {
+            // Custom rule: must match the password
+            return value === password.value || value === ""
+        },
+        messages: {
+            required: 'Please confirm your password',
+            minLength: 'Password must be at least 8 characters',
+            custom: 'Passwords do not match'
+        }
+        })
+    )
+
+    // Re-validate confirm password when main password changes
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    password.handleChange(e)
+    // If confirm password has a value, re-validate it when main password changes
+    if (confirmPassword.value) {
+      confirmPassword.forceValidate()
     }
-  };
+  }
+  
+ 
+    
+   
   
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate that passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setPasswordMatch(false);
+    // Validate all fields
+    const isFirstNameValid = firstName.forceValidate()
+    const isLastNameValid = lastName.forceValidate()
+    const isEmailValid = email.forceValidate()
+    const isPasswordValid = password.forceValidate()
+    const isConfirmPasswordValid = confirmPassword.forceValidate()
+    
+    if (!isPasswordValid || !isConfirmPasswordValid || !isEmailValid || !isFirstNameValid || !isLastNameValid) {
       return;
     }
     
@@ -63,7 +77,7 @@ export function SignupForm({
     try {
       // Process form submission here - simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
-      console.log("Form submitted:", formData);
+      console.log("Form submitted:");
       // Add your signup logic here
       
       // Reset form or redirect after successful signup
@@ -74,13 +88,7 @@ export function SignupForm({
     } finally {
       // Reset loading state
       setIsLoading(false);
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
-      })
+      
     }
   };
   
@@ -104,9 +112,16 @@ export function SignupForm({
                     type="text"
                     placeholder="John"
                     required
-                    value={formData.firstName}
-                    onChange={handleChange}
+                    value={firstName.value}
+                    onChange={firstName.handleChange}
+                    onBlur={firstName.handleBlur}
+                    className={firstName.error ? "border-red-500" : ""}
                   />
+                  {firstName.error && (
+                    <div className="text-xs text-red-500 pl-1 min-h-[16px]">
+                      <p>{firstName.error}</p>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="grid gap-2">
@@ -116,21 +131,34 @@ export function SignupForm({
                     type="text"
                     placeholder="Doe"
                     required
-                    value={formData.lastName}
-                    onChange={handleChange}
+                    value={lastName.value}
+                    onChange={lastName.handleChange}
+                    onBlur={lastName.handleBlur}
+                    className={lastName.error ? "border-red-500" : ""}
                   />
+                  {lastName.error && (
+                    <div className="text-xs text-red-500 pl-1 min-h-[16px]">
+                      <p>{lastName.error}</p>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="grid gap-2">
                   <Label className="text-left pl-1" htmlFor="email">Email</Label>
                   <Input
                     id="email"
-                    type="email"
+                    type="text"
                     placeholder="jdoe@example.com"
                     required
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={email.value}
+                    onChange={email.handleChange}
+                    onBlur={email.handleBlur}
                   />
+                  {email.error && (
+                    <div className="text-xs text-red-500 pl-1 min-h-[16px]">
+                      <p>{email.error}</p>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="grid gap-2">
@@ -142,9 +170,12 @@ export function SignupForm({
                       id="password" 
                       type={showPassword ? "text" : "password"} 
                       required
-                      value={formData.password}
-                      onChange={handleChange}
+                      value={password.value}
+                      onChange={handlePasswordChange}
+                      onBlur={password.handleBlur}
+                      className={password.error ? "border-red-500" : ""}
                     />
+                    
                     <Button
                       type="button"
                       variant="transparent"
@@ -162,6 +193,15 @@ export function SignupForm({
                       </span>
                     </Button>
                   </div>
+                  {/* <div className="min-h-[16px] max-w-full pl-1"> */}
+                      {password.error && (
+                        <div className="text-xs text-red-500 pl-1 min-h-[16px] max-w-full">
+                            <p className="truncate" title={password.error}>
+                            {password.error.length > 55 ? `${password.error.substring(0, 55)}...` : password.error}
+                            </p>
+                        </div>
+                    )}
+                  {/* </div> */}
                 </div>
                 
                 <div className="grid gap-2">
@@ -173,9 +213,10 @@ export function SignupForm({
                       id="confirmPassword" 
                       type={showConfirmPassword ? "text" : "password"} 
                       required
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className={!passwordMatch ? "border-red-500" : ""}
+                      value={confirmPassword.value}
+                      onChange={confirmPassword.handleChange}
+                      onBlur={confirmPassword.handleBlur}
+                      className={confirmPassword.error ? "border-red-500" : ""}
                     />
                     <Button
                       type="button"
@@ -194,6 +235,13 @@ export function SignupForm({
                       </span>
                     </Button>
                   </div>
+                  {/* <div className="min-h-[16px] max-w-full pl-1"> */}
+                    {confirmPassword.error && (
+                    <p className="text-xs text-red-500 truncate" title={confirmPassword.error}>
+                        {confirmPassword.error.length > 55 ? `${confirmPassword.error.substring(0, 55)}...` : confirmPassword.error}
+                    </p>
+                    )}
+                  {/* </div> */}
                   {!passwordMatch && (
                     <p className="text-xs text-red-500 pl-1">Passwords do not match</p>
                   )}

@@ -10,21 +10,28 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2 } from "lucide-react" // ✅ Add this
+import { Loader2 } from "lucide-react"
+import { ValidationPresets,  useFieldValidation } from '@/services/ValidationService'
 
 export function ForgotPasswordForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value) // ✅ Set string directly
-  }
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const email = useFieldValidation(ValidationPresets.email)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    const isEmailValid = email.forceValidate();
+
+    if(!isEmailValid){
+        return
+    }
+    
+
     setIsLoading(true)
     try {
       // Simulate async operation
@@ -34,9 +41,13 @@ export function ForgotPasswordForm({
       console.error(err)
     } finally {
       setIsLoading(false);
-      setEmail("");
+      
     }
   }
+
+   
+
+    
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -55,15 +66,25 @@ export function ForgotPasswordForm({
                 <Label htmlFor="email" className="text-left pl-1">Email</Label>
                 <Input
                   id="email"
-                  type="email"
+                  type="text"
                   placeholder="jdoe@example.com"
-                  required
-                  value={email}
-                  onChange={handleChange}
+                  value={email.value}
+                  onChange={email.handleChange}
+                  onBlur={email.handleBlur}
+                  className={email.error ? "border-red-500" : ""}
                 />
+                {/* Error message div - only visible when emailError exists */}
+                {email.error && (
+                  <div className="text-red-500 text-sm mt-1 pl-1">
+                    <p>
+                        {email.error}
+                    </p>
+                    
+                  </div>
+                )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading }>
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
