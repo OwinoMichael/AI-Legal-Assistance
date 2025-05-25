@@ -47,7 +47,11 @@ class AuthService {
   signup(firstName: string, lastName: string, email: string, password: string) {
     console.log('Signup request for:', email);
 
+<<<<<<< HEAD
     return axios.post(`${API_URL}/auth/createNewUser`, {
+=======
+    return axios.post(`${API_URL}/createNewUser`, {
+>>>>>>> origin/dev
       firstName,
       lastName,
       email,
