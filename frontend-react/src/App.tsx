@@ -13,8 +13,9 @@ import NotFoundPage from './pages/NotFoundPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import UnverifiedPage from './pages/UnverifiedPage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AuthService from './services/AuthService';
+import HomePage from './pages/HomePage';
 
 
 
@@ -48,7 +49,7 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path='/' element={<LoginPage />} />
+        <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />

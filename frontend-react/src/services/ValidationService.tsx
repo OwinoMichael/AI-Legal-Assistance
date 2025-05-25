@@ -3,6 +3,7 @@ import { useState } from 'react'
 // Define validation rule interface
 interface ValidationRule {
   type: 'required' | 'minLength' | 'maxLength' | 'pattern' | 'custom'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value?: any
   message: string
 }
@@ -17,7 +18,7 @@ interface ValidationOptions {
 export function useFieldValidation(options: ValidationOptions) {
   const [value, setValue] = useState("")
   const [error, setError] = useState("")
-  const { rules, validateOnChange = false } = options // Changed default to false
+  const { rules, validateOnChange = false } = options
 
   const validateField = (inputValue: string) => {
     // Reset error

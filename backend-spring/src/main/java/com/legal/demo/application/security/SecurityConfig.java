@@ -60,7 +60,7 @@ public class SecurityConfig {
                 }))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("auth/login", "auth/createNewUser", "auth/verify").permitAll();
+                    auth.requestMatchers("/login", "/createNewUser", "/verify").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
