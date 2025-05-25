@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react"; // Import icons from lucide-react
 import { createValidation, useFieldValidation, ValidationPresets } from "@/services/ValidationService";
+import AuthService from "@/services/AuthService";
+import { useNavigate } from 'react-router-dom';
 
 export function SignupForm({
   className,
@@ -19,6 +21,8 @@ export function SignupForm({
   const lastName = useFieldValidation(ValidationPresets.lastName);
   const email = useFieldValidation(ValidationPresets.email);
   const password = useFieldValidation(ValidationPresets.password);
+
+  const navigate = useNavigate();
   
   // State for password match validation
   const [passwordMatch, setPasswordMatch] = useState(true);
@@ -75,13 +79,14 @@ export function SignupForm({
     setIsLoading(true);
     
     try {
-      // Process form submission here - simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
-      console.log("Form submitted:");
-      // Add your signup logic here
-      
-      // Reset form or redirect after successful signup
-      // navigate("/dashboard"); // If using React Router
+        await AuthService.signup(
+          firstName.value,
+          lastName.value,
+          email.value,
+          password.value
+        );
+
+        navigate('/unverified-email');
     } catch (error) {
       console.error("Signup failed:", error);
       // Handle signup error (show message, etc.)
