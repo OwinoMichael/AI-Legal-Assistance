@@ -1,0 +1,31 @@
+{
+  "hash": "b3df8b66",
+  "configHash": "7e2b70e9",
+  "lockfileHash": "c1347b67",
+  "browserHash": "b52e8758",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "59de82c0",
+      "needsInterop": true
+    },
+    "@radix-ui/react-dropdown-menu": {
+      "src": "../../node_modules/@radix-ui/react-dropdown-menu/dist/index.mjs",
+      "file": "@radix-ui_react-dropdown-menu.js",
+      "fileHash": "89f98126",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "8a9d4fcb",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-3A6WRQ5K": {
+      "file": "chunk-3A6WRQ5K.js"
+    }
+  }
+}

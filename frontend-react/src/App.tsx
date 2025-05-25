@@ -6,15 +6,45 @@ import {
   Route, 
   createBrowserRouter, 
   createRoutesFromElements, 
-  RouterProvider 
+  RouterProvider, 
+  Navigate
 } from 'react-router-dom';
 import NotFoundPage from './pages/NotFoundPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import UnverifiedPage from './pages/UnverifiedPage';
+import { useEffect } from 'react';
+import AuthService from './services/AuthService';
 
 
 
 function App() {
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    setIsAuthenticated(!!user);
+    
+    const handleStorageChange = () => {
+      const user = AuthService.getCurrentUser();
+      setIsAuthenticated(!!user);
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); 
+  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+    const user = AuthService.getCurrentUser();
+    if (!user) {
+      return <Navigate to="/login" />;
+    }
+    return <>{children}</>;
+  };
+
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -23,7 +53,8 @@ function App() {
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/reset-password' element={<ResetPasswordPage />} />
-
+        <Route path='/unverified-email' element={<UnverifiedPage />} />
+        
 
         <Route path='*' element={<NotFoundPage />} />
       </>
