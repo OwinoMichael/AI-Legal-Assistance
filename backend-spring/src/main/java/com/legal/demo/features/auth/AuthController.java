@@ -1,6 +1,7 @@
 package com.legal.demo.features.auth;
 
 import com.legal.demo.domain.user.User;
+import com.legal.demo.features.auth.models.LoginRequest;
 import com.legal.demo.features.auth.models.ResendVerificationRequest;
 import com.legal.demo.features.auth.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,12 +19,14 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final EmailVerificationService emailVerificationService;
     private final ResendEmailVerificationService resendEmailVerificationService;
+    private final LoginService loginService;
 
-    public AuthController(RegistrationService registrationService, EmailVerificationService emailVerificationService, ResendEmailVerificationService resendEmailVerificationService) {
+    public AuthController(RegistrationService registrationService, EmailVerificationService emailVerificationService, ResendEmailVerificationService resendEmailVerificationService, LoginService loginService) {
         this.registrationService = registrationService;
         this.emailVerificationService = emailVerificationService;
         this.resendEmailVerificationService = resendEmailVerificationService;
 
+        this.loginService = loginService;
     }
 
     @PostMapping("/createNewUser")
@@ -36,6 +39,11 @@ public class AuthController {
     @GetMapping("/verify")
     public ResponseEntity<String> verifyUser(@RequestParam String token) throws TikaException, IOException, SAXException {
         return emailVerificationService.execute(token);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity login(LoginRequest loginRequest) throws TikaException, IOException, SAXException {
+        return loginService.execute(loginRequest);
     }
 
 
