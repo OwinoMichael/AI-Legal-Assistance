@@ -52,7 +52,7 @@ public class AuthController {
 
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestParam String token) throws TikaException, IOException, SAXException {
+    public ResponseEntity verifyUser(@RequestParam String token) throws TikaException, IOException, SAXException {
         return emailVerificationService.execute(token);
     }
 

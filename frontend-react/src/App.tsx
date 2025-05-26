@@ -16,53 +16,73 @@ import UnverifiedPage from './pages/UnverifiedPage';
 import { useEffect, useState } from 'react';
 import AuthService from './services/AuthService';
 import HomePage from './pages/HomePage';
+import EmailVerifyErrorPage from './pages/EmailVerifyErrorPage';
+import EmailVerifySuccessPage from './pages/EmailVerifySucessPage';
 
 
 
 function App() {
-
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  
+
+  // Keep auth state updated based on localStorage
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     setIsAuthenticated(!!user);
-    
+
     const handleStorageChange = () => {
       const user = AuthService.getCurrentUser();
       setIsAuthenticated(!!user);
     };
-    
-    window.addEventListener('storage', handleStorageChange);
+
+    window.addEventListener("storage", handleStorageChange);
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
-  }, []); 
+  }, []);
+
+  // Component to protect routes
   const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const user = AuthService.getCurrentUser();
+
     if (!user) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/login" replace />;
     }
+
+    if (!user.verified) {
+      return <Navigate to="/unverified-email" replace />;
+    }
+
     return <>{children}</>;
   };
 
-
+  // Define your router with protected and public routes
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path='/forgot-password' element={<ForgotPasswordPage />} />
-        <Route path='/reset-password' element={<ResetPasswordPage />} />
-        <Route path='/unverified-email' element={<UnverifiedPage />} />
-        
+        {/* Protected Home Page */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path='*' element={<NotFoundPage />} />
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/unverified-email" element={<UnverifiedPage />} />
+        <Route path="/verify-error" element={<EmailVerifyErrorPage />} />
+        <Route path="verify-success" element={<EmailVerifySuccessPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </>
     )
   );
 
-  return <RouterProvider router={router}/>
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

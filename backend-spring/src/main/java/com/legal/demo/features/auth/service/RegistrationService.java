@@ -2,14 +2,11 @@ package com.legal.demo.features.auth.service;
 
 import com.legal.demo.Command;
 import com.legal.demo.application.security.JWTUtil;
-import com.legal.demo.application.security.SecurityConfig;
 import com.legal.demo.domain.user.User;
-import com.legal.demo.features.auth.AuthController;
-import com.legal.demo.features.auth.events.UserRegistrationEvent;
+import com.legal.demo.features.auth.events.UserRegistrationEventObject;
 import com.legal.demo.features.auth.models.UserRegistrationRequest;
 import com.legal.demo.features.users.UserRepository;
 import org.apache.poi.ss.formula.functions.T;
-import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,11 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -65,7 +59,7 @@ public class RegistrationService implements Command<UserRegistrationRequest, T> 
 
             // Generate verification token
             String verificationToken = jwtUtil.generateToken(savedUser.getEmail());
-            eventPublisher.publishEvent(new UserRegistrationEvent(savedUser.getEmail(), verificationToken));
+            eventPublisher.publishEvent(new UserRegistrationEventObject(savedUser.getEmail(), verificationToken));
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Registration successful. Please check your email for verification.");

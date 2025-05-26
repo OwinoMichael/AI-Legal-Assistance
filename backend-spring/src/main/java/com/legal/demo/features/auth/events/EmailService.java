@@ -1,6 +1,5 @@
 package com.legal.demo.features.auth.events;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,7 +20,7 @@ public class EmailService {
 
     @Async
     @EventListener
-    public void handleUserRegistrationEvent(UserRegistrationEvent event) {
+    public void handleUserRegistrationEvent(UserRegistrationEventObject event) {
         String action = event.isResend() ? "complete" : "verify";
         String subject = event.isResend()
                 ? "New Verification Link"

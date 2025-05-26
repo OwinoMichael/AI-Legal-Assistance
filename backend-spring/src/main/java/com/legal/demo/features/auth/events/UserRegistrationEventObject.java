@@ -1,17 +1,17 @@
 package com.legal.demo.features.auth.events;
 
-public class UserRegistrationEvent {
+public class UserRegistrationEventObject {
     private final String email;
     private final String verificationToken;
 
     private final boolean isResend;
 
     // Constructor with isResend defaulting to false
-    public UserRegistrationEvent(String email, String token) {
+    public UserRegistrationEventObject(String email, String token) {
         this(email, token, false);
     }
 
-    public UserRegistrationEvent(String email, String token, boolean isResend) {
+    public UserRegistrationEventObject(String email, String token, boolean isResend) {
         this.email = email;
         this.verificationToken = token;
         this.isResend = isResend;

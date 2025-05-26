@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-// Replace with your actual icon import
- // Adjust imports as per your shad-cn usage
-import AuthService from "@/services/AuthService";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import AuthService from '@/services/AuthService'
+import { Terminal } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const UnverifiedPage = () => {
-  const [loading, setLoading] = useState(false);
+const EmailVerifyErrorPage = () => {
+    const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const user = AuthService.getCurrentUser();
   const navigate = useNavigate();
@@ -39,15 +37,14 @@ const UnverifiedPage = () => {
     }
   };
 
+
   return (
-    <Alert>
+
+    <Alert variant="destructive">
       <Terminal className="h-4 w-4" />
-      <AlertTitle>Verify your email!</AlertTitle>
+      <AlertTitle>Error!</AlertTitle>
       <AlertDescription>
-        We have sent an email to <strong>{user.email}</strong> to verify your email
-        address and activate your account.
-        <br />
-        Click below if you did not receive an email or want us to resend the verification email.
+        Verification token expried, click the button below to receive another email verification message
       </AlertDescription>
 
       <Button
@@ -62,7 +59,8 @@ const UnverifiedPage = () => {
         <p className="mt-3 text-sm text-gray-700">{statusMessage}</p>
       )}
     </Alert>
-  );
-};
+    
+  )
+}
 
-export default UnverifiedPage;
+export default EmailVerifyErrorPage

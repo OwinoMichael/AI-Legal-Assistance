@@ -5,7 +5,7 @@ import com.legal.demo.application.exceptions.ResourceNotFoundException;
 import com.legal.demo.application.security.JWTUtil;
 import com.legal.demo.domain.user.User;
 import com.legal.demo.features.auth.ResendVerificationContext;
-import com.legal.demo.features.auth.events.UserRegistrationEvent;
+import com.legal.demo.features.auth.events.UserRegistrationEventObject;
 import com.legal.demo.features.auth.models.ResendVerificationRequest;
 import com.legal.demo.features.users.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,7 +60,7 @@ public class ResendEmailVerificationService implements Command<ResendVerificatio
 
         // 3. Generate and send new token
         String verificationToken = jwtUtil.generateToken(user.getEmail());
-        eventPublisher.publishEvent(new UserRegistrationEvent(
+        eventPublisher.publishEvent(new UserRegistrationEventObject(
                 user.getEmail(),
                 verificationToken,
                 true // isResend flag
