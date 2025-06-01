@@ -1,4 +1,4 @@
-import './App.css'
+import './index.css'
 
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
@@ -18,6 +18,9 @@ import AuthService from './services/AuthService';
 import HomePage from './pages/HomePage';
 import EmailVerifyErrorPage from './pages/EmailVerifyErrorPage';
 import EmailVerifySuccessPage from './pages/EmailVerifySucessPage';
+import LandingPage from './pages/LandingPage';
+import CaseDetailPage from './pages/CasePage';
+import LegalPDFExport from './pages/CaseExportPage';
 
 
 
@@ -61,7 +64,7 @@ function App() {
       <>
         {/* Protected Home Page */}
         <Route
-          path="/"
+          path="/home"
           element={
             <ProtectedRoute>
               <HomePage />
@@ -70,6 +73,7 @@ function App() {
         />
 
         {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -77,6 +81,8 @@ function App() {
         <Route path="/unverified-email" element={<UnverifiedPage />} />
         <Route path="/verify-error" element={<EmailVerifyErrorPage />} />
         <Route path="verify-success" element={<EmailVerifySuccessPage />} />
+        <Route path="cases" element={<CaseDetailPage />} />
+        <Route path="cases-export" element={<LegalPDFExport />} />
         <Route path="*" element={<NotFoundPage />} />
       </>
     )
