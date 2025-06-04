@@ -7,7 +7,8 @@ import {
   createBrowserRouter, 
   createRoutesFromElements, 
   RouterProvider, 
-  Navigate
+  Navigate,
+  Outlet
 } from 'react-router-dom';
 import NotFoundPage from './pages/NotFoundPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -22,12 +23,29 @@ import LandingPage from './pages/LandingPage';
 import CaseDetailPage from './pages/CasePage';
 import LegalPDFExport from './pages/CaseExportPage';
 
-
+const ProtectedRoute = () => {
+  const [isValidating, setIsValidating] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  useEffect(() => {
+    const validateAuth = async () => {
+      const isValid = await AuthService.validateToken();
+      setIsAuthenticated(isValid);
+      setIsValidating(false);
+    };
+    
+    validateAuth();
+  }, []);
+  
+  if (isValidating) return <div>Loading...</div>;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  
+  return <Outlet />;
+};
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Keep auth state updated based on localStorage
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     setIsAuthenticated(!!user);
@@ -43,36 +61,27 @@ function App() {
     };
   }, []);
 
-  // Component to protect routes
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  // ✅ Use <Outlet> instead of children for route nesting
+  const ProtectedRoute = () => {
     const user = AuthService.getCurrentUser();
 
-    if (!user) {
-      return <Navigate to="/login" replace />;
-    }
+    if (!user) return <Navigate to="/login" replace />;
+    if (!user.verified) return <Navigate to="/unverified-email" replace />;
 
-    if (!user.verified) {
-      return <Navigate to="/unverified-email" replace />;
-    }
-
-    return <>{children}</>;
+    return <Outlet />;
   };
 
-  // Define your router with protected and public routes
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        {/* Protected Home Page */}
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
+        {/* ✅ Protected routes grouped under <ProtectedRoute> */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/cases" element={<CaseDetailPage />} />
+          <Route path="/cases-export" element={<LegalPDFExport />} />
+        </Route>
 
-        {/* Public Routes */}
+        {/* Public routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -80,9 +89,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/unverified-email" element={<UnverifiedPage />} />
         <Route path="/verify-error" element={<EmailVerifyErrorPage />} />
-        <Route path="verify-success" element={<EmailVerifySuccessPage />} />
-        <Route path="cases" element={<CaseDetailPage />} />
-        <Route path="cases-export" element={<LegalPDFExport />} />
+        <Route path="/verify-success" element={<EmailVerifySuccessPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </>
     )
@@ -90,5 +97,6 @@ function App() {
 
   return <RouterProvider router={router} />;
 }
+
 
 export default App;

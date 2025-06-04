@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { 
   FileText, User, Search, Filter, Plus, MoreHorizontal, Eye, Edit, Upload, Trash2,
-  Loader2, CheckCircle, X
+  Loader2, CheckCircle, X,
+  Settings,
+  LogOut,
+  Building,
+  Mail,
+  UserCircle
 } from 'lucide-react';
 
 // Import actual shadcn/ui components
@@ -43,9 +48,18 @@ import {
 const LegalWebApp = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isUpdateAccountOpen, setIsUpdateAccountOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedCases, setSelectedCases] = useState([]);
   const [newCase, setNewCase] = useState({ name: '', description: '' });
+  
+  // Account information state
+  const [accountInfo, setAccountInfo] = useState({
+    name: 'John Doe',
+    email: 'john@example.com',
+    //company: 'Acme Corp',
+    phone: '+1 (555) 123-4567'
+  });
 
   // Sample data
   const [cases, setCases] = useState([
@@ -127,6 +141,19 @@ const LegalWebApp = () => {
     }
   };
 
+  const handleUpdateAccount = () => {
+    // Here you would typically make an API call to update the account
+    console.log('Account updated:', accountInfo);
+    setIsUpdateAccountOpen(false);
+  };
+
+  const handleLogout = () => {
+    // Here you would typically call your auth service logout
+    console.log('Logging out...');
+    // AuthService.logout();
+    // window.location.href = '/login';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-indigo-100 relative">
       {/* Background blobs */}
@@ -160,36 +187,169 @@ const LegalWebApp = () => {
                   </Avatar>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="z-50 bg-white border-l border-gray-200 shadow-2xl">
-                <SheetHeader className="border-b border-gray-100 pb-4">
-                  <SheetTitle className="text-gray-900">Account Settings</SheetTitle>
-                  <SheetDescription className="text-gray-600">
-                    Manage your account information and preferences.
-                  </SheetDescription>
+              <SheetContent className="z-50 bg-white border-l border-gray-200 shadow-2xl w-80">
+                <SheetHeader className="border-b border-gray-100 pb-6">
+                  <div className="flex items-center space-x-4">
+                    <Avatar className="h-16 w-16">
+                      <AvatarImage src="" alt="Profile" />
+                      <AvatarFallback className="bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-600 text-xl">
+                        <User className="w-8 h-8" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <SheetTitle className="text-gray-900 text-left">{accountInfo.name}</SheetTitle>
+                      <SheetDescription className="text-gray-600 text-left">
+                        {accountInfo.email}
+                      </SheetDescription>
+                    </div>
+                  </div>
                 </SheetHeader>
-                <div className="grid gap-4 py-6">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right text-gray-700 font-medium">Name</Label>
-                    <Input id="name" defaultValue="John Doe" className="col-span-3 bg-white border-gray-300" />
+
+                <div className="py-6 space-y-6">
+                  {/* Account Information */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Account Information</h3>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 text-sm">
+                        <UserCircle className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-600">Name:</span>
+                        <span className="text-gray-900 font-medium">{accountInfo.name}</span>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 text-sm">
+                        <Mail className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-600">Email:</span>
+                        <span className="text-gray-900 font-medium">{accountInfo.email}</span>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 text-sm">
+                        <Building className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-600">Company:</span>
+                        <span className="text-gray-900 font-medium">{accountInfo.company}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right text-gray-700 font-medium">Email</Label>
-                    <Input id="email" defaultValue="john@example.com" className="col-span-3 bg-white border-gray-300" />
+
+                  {/* Account Actions */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Account Actions</h3>
+                    
+                    <Button
+                      onClick={() => setIsUpdateAccountOpen(true)}
+                      variant="outline"
+                      className="w-full justify-start bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                    >
+                      <Settings className="w-4 h-4 mr-3" />
+                      Update Account
+                    </Button>
+
+                    <Button
+                      onClick={handleLogout}
+                      variant="outline"
+                      className="w-full justify-start bg-white border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+                    >
+                      <LogOut className="w-4 h-4 mr-3" />
+                      Logout
+                    </Button>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="company" className="text-right text-gray-700 font-medium">Company</Label>
-                    <Input id="company" defaultValue="Acme Corp" className="col-span-3 bg-white border-gray-300" />
+
+                  {/* Account Stats */}
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <h3 className="text-sm font-semibold text-gray-900">Quick Stats</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Total Cases:</span>
+                        <div className="font-semibold text-blue-600">{cases.length}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Active Cases:</span>
+                        <div className="font-semibold text-green-600">
+                          {cases.filter(c => c.status === 'In Progress').length}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-end space-x-2 pt-4 border-t border-gray-100">
-                  <Button variant="outline" className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</Button>
-                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white">Save Changes</Button>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
       </header>
+
+      {/* Update Account Dialog */}
+      <Dialog open={isUpdateAccountOpen} onOpenChange={setIsUpdateAccountOpen}>
+        <DialogContent className="z-50 bg-white border border-gray-200 shadow-2xl max-w-md">
+          <DialogHeader className="border-b border-gray-100 pb-4">
+            <DialogTitle className="text-gray-900 flex items-center">
+              <Settings className="w-5 h-5 mr-2" />
+              Update Account Information
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Update your personal information and account details.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-6">
+            <div className="space-y-2">
+              <Label htmlFor="updateName" className="text-gray-700 font-medium">Full Name</Label>
+              <Input
+                id="updateName"
+                value={accountInfo.name}
+                onChange={(e) => setAccountInfo({ ...accountInfo, name: e.target.value })}
+                className="bg-white border-gray-300"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="updateEmail" className="text-gray-700 font-medium">Email Address</Label>
+              <Input
+                id="updateEmail"
+                type="email"
+                value={accountInfo.email}
+                onChange={(e) => setAccountInfo({ ...accountInfo, email: e.target.value })}
+                className="bg-white border-gray-300"
+              />
+            </div>
+            
+            {/* <div className="space-y-2">
+              <Label htmlFor="updateCompany" className="text-gray-700 font-medium">Company</Label>
+              <Input
+                id="updateCompany"
+                value={accountInfo.company}
+                onChange={(e) => setAccountInfo({ ...accountInfo, company: e.target.value })}
+                className="bg-white border-gray-300"
+              />
+            </div> */}
+            
+            <div className="space-y-2">
+              <Label htmlFor="updatePhone" className="text-gray-700 font-medium">Phone Number</Label>
+              <Input
+                id="updatePhone"
+                value={accountInfo.phone}
+                onChange={(e) => setAccountInfo({ ...accountInfo, phone: e.target.value })}
+                className="bg-white border-gray-300"
+              />
+            </div>
+          </div>
+          
+          <DialogFooter className="border-t border-gray-100 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setIsUpdateAccountOpen(false)}
+              className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleUpdateAccount}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+            >
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Main Content with proper z-index */}
       <main className="max-w-7xl mx-auto px-6 py-8 relative z-10">
@@ -240,8 +400,6 @@ const LegalWebApp = () => {
               </Button>
             </div>
 
-
-
             {/* Create Case Dialog */}
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
@@ -249,7 +407,6 @@ const LegalWebApp = () => {
                   <Plus className="w-4 h-4 mr-2 text-white" />
                   Create Case
                 </Button>
-
               </DialogTrigger>
               <DialogContent className="z-50 bg-white border border-gray-200 shadow-2xl">
                 <DialogHeader className="border-b border-gray-100 pb-4">
