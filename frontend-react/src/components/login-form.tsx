@@ -57,7 +57,7 @@ export function LoginForm({
       const user = AuthService.getCurrentUser();
 
       if (user?.verified) {
-        navigate("/", { replace: true });
+        navigate("/home", { replace: true });
       } else if (user && !user.verified) {
         navigate("/unverified-email", { replace: true });
       } else {

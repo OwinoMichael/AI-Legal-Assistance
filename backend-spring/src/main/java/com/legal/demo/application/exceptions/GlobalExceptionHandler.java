@@ -16,6 +16,7 @@ public class GlobalExceptionHandler {
     //Handler all custom base exceptions
     @ExceptionHandler(CustomBaseException.class)
     public ResponseEntity<ErrorResponse> handleCustomExceptions(CustomBaseException exception){
+        exception.printStackTrace();
         return ResponseEntity.status(exception.getHttpStatus()).body(exception.getErrorResponse());
     }
 

@@ -43,12 +43,7 @@ public class LoginService implements Command<LoginRequest, T> {
 
     @Override
     public ResponseEntity execute(LoginRequest request) throws TikaException, IOException, SAXException {
-        // Add debugging
-        System.out.println("Received LoginRequest: " + request);
-        System.out.println("Email: '" + request.getEmail() + "'");
-        System.out.println("Password: " + (request.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
 
-        // Validate input
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", "INVALID_INPUT", "message", "Email is required"));
@@ -61,22 +56,18 @@ public class LoginService implements Command<LoginRequest, T> {
 
         try {
             // First, check if user exists and get their details
-            System.out.println("Looking up user with email: " + request.getEmail().trim());
             User user = usersRepository.findUsersByEmail(request.getEmail().trim())
                     .orElse(null);
 
             if (user == null) {
-                System.out.println("User not found for email: " + request.getEmail());
                 // User doesn't exist - return invalid credentials
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "INVALID_CREDENTIALS", "message", "Invalid email or password"));
             }
 
-            System.out.println("User found: " + user.getEmail() + ", enabled: " + user.isEnabled());
 
             // Check if user is verified BEFORE authentication
             if (!user.isEnabled()) {
-                System.out.println("User not verified: " + user.getEmail());
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(Map.of(
                                 "error", "ACCOUNT_NOT_VERIFIED",
@@ -96,16 +87,15 @@ public class LoginService implements Command<LoginRequest, T> {
             return ResponseEntity.ok(Map.of(
                     "token", token,
                     "email", user.getEmail(),
+                    "id", user.getId(),
                     "verified", true
             ));
 
         } catch (BadCredentialsException e) {
-            System.out.println("Authentication failed for user: " + request.getEmail());
             // This will now only catch actual password mismatches
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "INVALID_CREDENTIALS", "message", "Invalid email or password"));
         } catch (Exception e) {
-            System.out.println("Unexpected error during login: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "SERVER_ERROR", "message", "An error occurred during login"));

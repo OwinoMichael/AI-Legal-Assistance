@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Case {
 
     @Id
-    @NotNull(message = "Title is required")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "Title is required")
@@ -24,6 +24,7 @@ public class Case {
 
     @Column(name = "description")
     private String description;
+
 
     @Column(name = "created_at")
     private LocalDate createdAt;

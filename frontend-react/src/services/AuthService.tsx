@@ -63,7 +63,7 @@ class AuthService {
         email,
         password,
       })
-      .then((response: { data: { token: string; email: string; verified: boolean } }) => {
+      .then((response: { data: { token: string; email: string; verified: boolean; id: string } }) => {
         console.log('Login response:', response);
         
         if (response.data && response.data.token) {
@@ -72,10 +72,14 @@ class AuthService {
             JSON.stringify({
               token: response.data.token,
               email: response.data.email,
-              verified: response.data.verified
+              verified: response.data.verified,
+              id: response.data.id
             })
+            
           );
-          console.log('User stored in localStorage');
+          console.log('Login response data:', response.data);
+
+          
         } else {
           console.warn('No token found in response:', response.data);
           throw new Error('No authentication token received');

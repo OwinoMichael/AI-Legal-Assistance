@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/case")
+@RequestMapping("/cases")
 public class CaseController {
 
     private final GetAllCases getAllCases;
@@ -33,16 +33,16 @@ public class CaseController {
     public ResponseEntity<Page<CaseResponseDTO>> getAllCases(
             @Valid CaseQueryParams caseQueryParams
     ){
-        return getAllCases.execute(null);
+        return getAllCases.execute(caseQueryParams);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CaseResponseDTO> getCase(@RequestParam Integer id){
+    public ResponseEntity<CaseResponseDTO> getCase(@PathVariable Integer id){
         return getCase.execute(id);
     }
 
     @PostMapping("/create-case")
-    public ResponseEntity<CaseResponseDTO> creatCase(@RequestBody CaseDTO legalCase){
+    public ResponseEntity<CaseResponseDTO> creatCase(@Valid @RequestBody CaseDTO legalCase){
         return createCase.execute(legalCase);
     }
 }

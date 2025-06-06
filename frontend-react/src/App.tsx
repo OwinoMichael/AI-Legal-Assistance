@@ -77,7 +77,7 @@ function App() {
         {/* ✅ Protected routes grouped under <ProtectedRoute> */}
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/cases" element={<CaseDetailPage />} />
+          <Route path="/cases/:id" element={<CaseDetailPage />} />
           <Route path="/cases-export" element={<LegalPDFExport />} />
         </Route>
 

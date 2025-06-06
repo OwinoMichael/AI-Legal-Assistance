@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, FileText, Shield, AlertTriangle, MessageCircle, Upload, CheckCircle, Star, Users, Clock, Mail, Twitter, Github, Linkedin } from 'lucide-react';
 
 export default function LegalMindLanding() {
@@ -91,9 +92,11 @@ export default function LegalMindLanding() {
             >
               Pricing
             </button>
-            <button className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all transform hover:scale-105">
-              Sign In
-            </button>
+            <Link to="/login">
+              <button className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-all transform hover:scale-105">
+                Sign In
+              </button>
+            </Link>
           </div>
         </div>
       </nav>

@@ -7,17 +7,21 @@ public class CaseResponseDTO {
     private Integer id;
     private String title;
     private String description;
+    private Integer documents;
     private LocalDate createdAt;
+    private LocalDate updatedAt;
     private String userId;
 
     public CaseResponseDTO() {
     }
 
-    public CaseResponseDTO(Integer id, String title, String description, LocalDate createdAt, String userId) {
+    public CaseResponseDTO(Integer id, String title, String description, Integer documents, LocalDate createdAt, LocalDate updatedAt, String userId) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.documents = documents;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.userId = userId;
     }
 
@@ -59,5 +63,21 @@ public class CaseResponseDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Integer getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Integer documents) {
+        this.documents = documents;
+    }
+
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -13,12 +13,12 @@ public class CaseDTO {
     private String description;
 
     @NotNull(message = "User ID is required")
-    private UUID userId;
+    private String userId;
 
     public CaseDTO() {
     }
 
-    public CaseDTO(String title, String description, UUID userId) {
+    public CaseDTO(String title, String description, String userId) {
         this.title = title;
         this.description = description;
         this.userId = userId;
@@ -42,11 +42,11 @@ public class CaseDTO {
 
 
 
-    public @NotNull(message = "User ID is required") UUID getUserId() {
+    public @NotNull(message = "User ID is required") String getUserId() {
         return userId;
     }
 
-    public void setUserId(@NotNull(message = "User ID is required") UUID userId) {
+    public void setUserId(@NotNull(message = "User ID is required") String userId) {
         this.userId = userId;
     }
 }

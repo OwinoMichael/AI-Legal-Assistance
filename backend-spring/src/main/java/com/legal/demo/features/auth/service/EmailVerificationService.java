@@ -50,7 +50,7 @@ public class EmailVerificationService implements Command<String, String> {
         userRepository.save(user);
 
         // Redirect to success page with optional login link
-        URI redirectUri = URI.create(baseUrl + "/verify-success");
+        URI redirectUri = URI.create(baseUrl + "/login");
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(redirectUri);
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
