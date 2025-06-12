@@ -1,7 +1,8 @@
-package com.legal.demo.features.documentupload.commandhandler;
+package com.legal.demo.features.documentupload.queryhandler;
 
 import com.legal.demo.Command;
 
+import com.legal.demo.features.documentupload.commandhandler.FileStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

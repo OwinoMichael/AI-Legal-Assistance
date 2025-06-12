@@ -5,6 +5,7 @@ import com.legal.demo.domain.legalcase.Document;
 import com.legal.demo.features.documentupload.DocumentRepository;
 import com.legal.demo.features.summary.SummaryCommand;
 import com.legal.demo.features.summary.SummaryResponse;
+import jakarta.annotation.PostConstruct;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -12,6 +13,7 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,22 @@ public class SummarySyncService implements SummaryCommand {
     private final DocumentRepository documentRepo;
     private final AIModelClient aiClient;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @PostConstruct
+    public void init() {
+        // Convert to absolute path once during initialization
+        this.uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(this.uploadPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create upload directory", e);
+        }
+    }
+
+    private Path uploadPath;
+
     public SummarySyncService(DocumentRepository documentRepo, AIModelClient aiClient) {
         this.documentRepo = documentRepo;
         this.aiClient = aiClient;
@@ -51,7 +69,7 @@ public class SummarySyncService implements SummaryCommand {
 
     // Shared helper methods
     String extractTextFromFile(String filePath) throws IOException, TikaException, SAXException {
-        Path path = Paths.get(filePath);
+        Path path = uploadPath.resolve(filePath);
         if (!Files.exists(path)) {
             throw new IOException("File not found at path: " + filePath);
         }

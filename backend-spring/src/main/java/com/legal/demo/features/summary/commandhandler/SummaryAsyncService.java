@@ -38,8 +38,12 @@ public class SummaryAsyncService implements AsyncSummaryService {
             String extractedText = syncService.extractTextFromFile(doc.getFilePath());
             String cleanText = syncService.preprocessText(extractedText);
 
-            SummaryResponse response = aiClient.sendForSummary(cleanText);
-            String summary = response.getSummaryText();
+            System.out.println(cleanText);
+
+//            SummaryResponse response = aiClient.sendForSummary(cleanText);
+//            String summary = response.getSummaryText();
+
+
 
             // Uncomment when ready to persist
             // doc.setSummary(summary);

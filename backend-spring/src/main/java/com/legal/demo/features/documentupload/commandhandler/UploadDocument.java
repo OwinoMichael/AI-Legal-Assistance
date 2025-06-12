@@ -78,6 +78,7 @@ public class UploadDocument implements Command<DocumentUploadDTO, DocumentRespon
         response.setFileSize(document.getFileSize());
         response.setCreatedAt(document.getCreatedAt());
         response.setCaseId(document.getLegalCase().getId());
+        System.out.println("Stored file path: " + document.getFilePath());
         response.setDownloadUrl("/documents/download/" + document.getFilePath());
         return response;
     }

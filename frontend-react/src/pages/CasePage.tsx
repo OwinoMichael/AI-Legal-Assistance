@@ -10,16 +10,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const CaseDetailPage: React.FC = () => {
-  const [documents, setDocuments] = useState<Document[]>([
-    {
-      id: 1,
-      name: "Employment_Contract_v2.pdf",
-      size: "1.2 MB",
-      uploadDate: "2024-01-15",
-      status: "analyzed",
-      analysisProgress: 100
-    }
-  ]);
+  const [documents, setDocuments] = useState<Document[]>([]);
 
   const { id } = useParams();
   const [caseData, setCaseData] = useState(null);
@@ -46,6 +37,38 @@ const CaseDetailPage: React.FC = () => {
       fetchCase();
     }
   }, [id]);
+
+  // Fetch documents for this case
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      if (!id) return;
+      
+      try {
+        const response = await axios.get(`http://localhost:8080/documents/case/${id}`);
+        const serverDocuments = response.data.map((doc: any) => ({
+          id: Date.now() + doc.id, // Create unique client-side ID
+          serverId: doc.id, // Store server ID
+          name: doc.fileName,
+          size: `${(doc.fileSize / (1024 * 1024)).toFixed(1)} MB`,
+          uploadDate: doc.createdAt ? new Date(doc.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          status: "analyzed",
+          analysisProgress: 100,
+          filePath: doc.filePath // Store file path for downloads
+        }));
+        
+        // Replace the mock data with server data
+        setDocuments(serverDocuments);
+      } catch (error) {
+        console.error('Failed to fetch documents:', error);
+        // If fetch fails, keep the mock data or show empty state
+        setDocuments([]);
+      }
+    };
+
+    if (caseData) {
+      fetchDocuments();
+    }
+  }, [id, caseData]);
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
@@ -150,6 +173,7 @@ const CaseDetailPage: React.FC = () => {
             <DocumentUpload 
               documents={documents}
               setDocuments={setDocuments}
+              caseId={id!} // Pass the case ID
             />
             
             {documents.some(doc => doc.status === "analyzed") && (

@@ -11,6 +11,7 @@ import {
   Outlet
 } from 'react-router-dom';
 import NotFoundPage from './pages/NotFoundPage';
+import { Toaster } from 'sonner'
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import UnverifiedPage from './pages/UnverifiedPage';
@@ -95,7 +96,9 @@ function App() {
     )
   );
 
-  return <RouterProvider router={router} />;
+  return( 
+    <><RouterProvider router={router} /><Toaster /></>
+  );
 }
 
 

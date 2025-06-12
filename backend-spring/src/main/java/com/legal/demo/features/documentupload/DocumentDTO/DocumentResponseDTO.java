@@ -8,6 +8,7 @@ public class DocumentResponseDTO {
     private String fileName;
     private String fileType;
     private Long fileSize;
+    private String filePath;
     private String downloadUrl;
     private LocalDate createdAt;
     private Integer caseId;
@@ -15,11 +16,12 @@ public class DocumentResponseDTO {
     public DocumentResponseDTO() {
     }
 
-    public DocumentResponseDTO(Integer id, String fileName, String fileType, Long fileSize, String downloadUrl, LocalDate createdAt, Integer caseId) {
+    public DocumentResponseDTO(Integer id, String fileName, String fileType, Long fileSize, String filePath, String downloadUrl, LocalDate createdAt, Integer caseId) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
         this.fileSize = fileSize;
+        this.filePath = filePath;
         this.downloadUrl = downloadUrl;
         this.createdAt = createdAt;
         this.caseId = caseId;
@@ -79,5 +81,13 @@ public class DocumentResponseDTO {
 
     public void setCaseId(Integer caseId) {
         this.caseId = caseId;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

@@ -2,6 +2,7 @@ package com.legal.demo.features.documentupload.commandhandler;
 
 
 import com.legal.demo.application.exceptions.ResourceNotFoundException;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -24,6 +25,19 @@ public class FileStorageService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @PostConstruct
+    public void init() {
+        // Convert to absolute path once during initialization
+        this.uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(this.uploadPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create upload directory", e);
+        }
+    }
+
+    private Path uploadPath;
+
     //MultipartFile (Spring) - Standard interface for handling file uploads in web requests
     //Features -- file.getOriginalFilename(); -- file.getBytes(); -- file.getSize(); --
     public String storeFile(MultipartFile file) throws IOException{
@@ -32,7 +46,7 @@ public class FileStorageService {
         String storedFileName = UUID.randomUUID() + "." + fileExtension;
 
         //Paths (java.nio.file) - Creates Path objects for file system operations
-        Path targetLocation = Paths.get(uploadDir).resolve(storedFileName);
+        Path targetLocation = uploadPath.resolve(storedFileName);
 
         //Files (java.nio.file) - Utility for file operations (create, copy, delete)
         Files.createDirectories(targetLocation.getParent());
@@ -46,7 +60,11 @@ public class FileStorageService {
     //Uniform access to files for downloading
     public Resource loadFileAsResource(String fileName) {
         try {
-            Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+            // Use the same path construction as storeFile
+            Path filePath = uploadPath.resolve(fileName);
+            System.out.println("Looking for file at: " + filePath.toAbsolutePath());
+            System.out.println("File exists: " + Files.exists(filePath));
+
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
