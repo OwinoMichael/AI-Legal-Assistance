@@ -77,4 +77,21 @@ public class FileStorageService {
     }
 
 
+    public void deleteFileWithException(String fileName) throws IOException {
+        // Resolve the file path
+        Path filePath = uploadPath.resolve(fileName);
+
+        if (!Files.exists(filePath)) {
+            throw new ResourceNotFoundException("File not found for deletion: " + fileName);
+        }
+
+        try {
+            Files.delete(filePath);
+            System.out.println("Successfully deleted file: " + fileName);
+        } catch (IOException e) {
+            throw new IOException("Failed to delete file: " + fileName, e);
+        }
+    }
+
+
 }

@@ -19,10 +19,12 @@ public class DeleteDocument implements Command<Integer, Void> {
 
     private final DocumentRepository documentRepository;
     private final CaseRepository caseRepository;
+    private final FileStorageService fileStorageService;
 
-    public DeleteDocument(DocumentRepository documentRepository, CaseRepository caseRepository) {
+    public DeleteDocument(DocumentRepository documentRepository, CaseRepository caseRepository, FileStorageService fileStorageService) {
         this.documentRepository = documentRepository;
         this.caseRepository = caseRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -31,7 +33,9 @@ public class DeleteDocument implements Command<Integer, Void> {
             Document document = documentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
 
+            fileStorageService.deleteFileWithException(document.getFileName());
             documentRepository.delete(document);
+
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {

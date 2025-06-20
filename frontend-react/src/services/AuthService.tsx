@@ -123,7 +123,31 @@ class AuthService {
     console.log('User logged out, localStorage cleared');
   }
 
-  // ... rest of your existing methods
+  signup(firstName: string, lastName: string, email: string, password: string) {
+    console.log('Signup request for:', email);
+
+    return axios.post(`${API_URL}/createNewUser`, {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+  }
+
+  resendVerification(email: string) {
+  console.log('Resending verification email for:', email);
+
+  return axios.post(`${API_URL}/resend-verification`, { email })
+    .then((response) => {
+      console.log('Verification email sent:', response);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error('Error resending verification email:', error);
+      throw error;
+    });
+  }
+
 
   getCurrentUser() {
     const userStr = localStorage.getItem('user');

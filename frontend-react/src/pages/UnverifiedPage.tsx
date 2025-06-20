@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const UnverifiedPage = () => {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const user = AuthService.getCurrentUser();
+  const user = AuthService.getCurrentUser();scroll
   const navigate = useNavigate();
 
   useEffect(() => {

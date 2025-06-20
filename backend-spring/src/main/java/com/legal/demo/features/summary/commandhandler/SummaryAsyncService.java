@@ -4,7 +4,6 @@ import com.legal.demo.application.exceptions.ResourceNotFoundException;
 import com.legal.demo.domain.legalcase.Document;
 import com.legal.demo.features.documentupload.DocumentRepository;
 import com.legal.demo.features.summary.AsyncSummaryService;
-import com.legal.demo.features.summary.SummaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -38,9 +37,13 @@ public class SummaryAsyncService implements AsyncSummaryService {
             String extractedText = syncService.extractTextFromFile(doc.getFilePath());
             String cleanText = syncService.preprocessText(extractedText);
 
-            System.out.println(cleanText);
+            //log.info("Clean text to be embedded:\n{}", cleanText);
 
-//            SummaryResponse response = aiClient.sendForSummary(cleanText);
+            float[] embedding = aiClient.getEmbeddingForPgVector(cleanText);
+
+            //System.out.println(text);
+
+//            SummaryResponse response = aiClient.sendForEmbedding(cleanText);
 //            String summary = response.getSummaryText();
 
 

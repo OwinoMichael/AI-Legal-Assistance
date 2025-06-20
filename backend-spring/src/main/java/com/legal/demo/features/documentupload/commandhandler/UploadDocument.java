@@ -58,6 +58,7 @@ public class UploadDocument implements Command<DocumentUploadDTO, DocumentRespon
 
             Document savedDocument = documentRepository.save(document);
 
+
             // 🔥 Trigger summarization
             summaryService.generateSummaryAsync(savedDocument.getId());
 
