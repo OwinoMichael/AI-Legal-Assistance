@@ -33,7 +33,7 @@ public class DeleteDocument implements Command<Integer, Void> {
             Document document = documentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Document not found"));
 
-            fileStorageService.deleteFileWithException(document.getFileName());
+            fileStorageService.deleteFileWithException(document.getFilePath());
             documentRepository.delete(document);
 
 

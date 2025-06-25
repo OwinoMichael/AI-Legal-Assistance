@@ -34,3 +34,16 @@ CREATE TABLE document (
     legal_case_id INT NOT NULL,
     FOREIGN KEY (legal_case_id) REFERENCES legal_case(id)
 );
+
+
+CREATE TABLE document_embedding (
+    id BIGSERIAL PRIMARY KEY,
+    embedding VECTOR(768) NOT NULL,
+    document_id INTEGER NOT NULL,
+
+    CONSTRAINT fk_document
+        FOREIGN KEY (document_id)
+        REFERENCES document(id)
+        ON DELETE CASCADE
+);
+

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -30,6 +31,24 @@ public class Document {
     @Column(name = "file_type")
     private String fileType;
 
+    @Column(name = "summary")
+    private String summary;
+
+    @Column(name = "summary_generated_at")
+    private LocalDateTime summaryGeneratedAt;
+
+    @Column(name = "processing_status")
+    private String processingStatus;
+
+    @Column(name = "analysis_confidence")
+    private Double analysisConfidence;
+
+    @Column(name = "risk_level")
+    private String riskLevel;
+
+    @Column(name = "processing_error")
+    private String processingError;
+
     @Column(name = "created_at")
     private LocalDate createdAt;
 
@@ -43,13 +62,45 @@ public class Document {
     public Document() {
     }
 
-    public Document(Integer id, String fileName, String filePath, LocalDate createdAt, LocalDate updatedAt, Case legalCase) {
+    public Document(Integer id, String fileName, String filePath, Long fileSize, String fileType, String summary, LocalDateTime summaryGeneratedAt, String processingStatus, Double analysisConfidence, String riskLevel, String processingError, LocalDate createdAt, LocalDate updatedAt, Case legalCase) {
         this.id = id;
         this.fileName = fileName;
         this.filePath = filePath;
+        this.fileSize = fileSize;
+        this.fileType = fileType;
+        this.summary = summary;
+        this.summaryGeneratedAt = summaryGeneratedAt;
+        this.processingStatus = processingStatus;
+        this.analysisConfidence = analysisConfidence;
+        this.riskLevel = riskLevel;
+        this.processingError = processingError;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.legalCase = legalCase;
+    }
+
+    public String getProcessingError() {
+        return processingError;
+    }
+
+    public void setProcessingError(String processingError) {
+        this.processingError = processingError;
+    }
+
+    public Double getAnalysisConfidence() {
+        return analysisConfidence;
+    }
+
+    public void setAnalysisConfidence(Double analysisConfidence) {
+        this.analysisConfidence = analysisConfidence;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 
     public Long getFileSize() {
@@ -114,6 +165,30 @@ public class Document {
 
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public LocalDateTime getSummaryGeneratedAt() {
+        return summaryGeneratedAt;
+    }
+
+    public void setSummaryGeneratedAt(LocalDateTime summaryGeneratedAt) {
+        this.summaryGeneratedAt = summaryGeneratedAt;
+    }
+
+    public String getProcessingStatus() {
+        return processingStatus;
+    }
+
+    public void setProcessingStatus(String processingStatus) {
+        this.processingStatus = processingStatus;
     }
 
     @Override

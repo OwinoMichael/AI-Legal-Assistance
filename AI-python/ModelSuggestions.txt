@@ -1,0 +1,14 @@
+Future Improvements:
+
+Custom Model Training: Fine-tune BERT/RoBERTa on legal documents
+Legal-Specific Models: Use models trained on legal corpora
+Database Integration: Store extracted patterns for learning
+Confidence Scoring: Improve accuracy metrics
+Document Type Detection: Auto-detect contract types
+
+The system provides a solid foundation that you can iterate on. You can improve accuracy by:
+
+Adding more legal term definitions
+Refining regex patterns based on your document types
+Training custom models on your specific legal documents
+Adding feedback loops to improve extraction accuracy

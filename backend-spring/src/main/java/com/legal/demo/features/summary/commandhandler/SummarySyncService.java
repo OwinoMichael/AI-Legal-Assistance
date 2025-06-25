@@ -4,7 +4,7 @@ import com.legal.demo.application.exceptions.ResourceNotFoundException;
 import com.legal.demo.domain.legalcase.Document;
 import com.legal.demo.features.documentupload.DocumentRepository;
 import com.legal.demo.features.summary.SummaryCommand;
-import com.legal.demo.features.summary.SummaryResponse;
+import com.legal.demo.features.summary.models.SummaryResponse;
 import jakarta.annotation.PostConstruct;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -64,7 +64,7 @@ public class SummarySyncService implements SummaryCommand {
         String cleanText = preprocessText(extractedText);
 
         SummaryResponse response = aiClient.sendForSummary(cleanText);
-        return ResponseEntity.ok(new SummaryResponse(response.getSummaryText()));
+        return ResponseEntity.ok(new SummaryResponse(response.getSummary()));
     }
 
     // Shared helper methods
