@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react';
 import axios from 'axios';
-import type { Document, DocumentResponseDTO } from './../components/CasePageComponents/types';
+import type { CaseDocument, DocumentResponseDTO } from './../components/CasePageComponents/types';
 
 export const useDocumentOperations = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDocuments = useCallback(async (caseId: string | number): Promise<Document[]> => {
+  const fetchDocuments = useCallback(async (caseId: string | number): Promise<CaseDocument[]> => {
     setIsLoading(true);
     setError(null);
     

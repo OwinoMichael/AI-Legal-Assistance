@@ -23,11 +23,11 @@ import {
   AlertCircle 
 } from 'lucide-react';
 import axios from 'axios';
-import type { Document } from './types';
+import type { CaseDocument } from './types';
 
 interface DocumentUploadProps {
-  documents: Document[];
-  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
+  documents: CaseDocument[];
+  setDocuments: React.Dispatch<React.SetStateAction<CaseDocument[]>>;
   caseId: string | number; // Add caseId prop
 }
 
@@ -35,7 +35,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadErrors, setUploadErrors] = useState<{[key: number]: string}>({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [documentToDelete, setDocumentToDelete] = useState<Document | null>(null);
+  const [documentToDelete, setDocumentToDelete] = useState<CaseDocument | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -112,7 +112,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
     }
   };
 
-  const handleDownloadDocument = async (documents: Document) => {
+  const handleDownloadDocument = async (documents: CaseDocument) => {
     if (!documents.filePath && !documents.serverId) {
       console.error('No file path or server ID available for download');
       toast.error("No file path or server ID available for download");
@@ -149,7 +149,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
     }
   };
 
-  const handleDeleteDocument = async (documents: Document) => {
+  const handleDeleteDocument = async (documents: CaseDocument) => {
     if (!documents.serverId) {
       // If it's not uploaded yet, just remove from UI
       handleRemoveDocument(documents.id);
@@ -198,7 +198,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
     setDocumentToDelete(null);
   };
 
-  const handleViewDocument = (document: Document) => {
+  const handleViewDocument = (document: CaseDocument) => {
     // For now, we'll download the document to view it
     // In a more advanced implementation, you might have a document viewer
     handleDownloadDocument(document);
@@ -207,11 +207,11 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
   const handleFileUpload = async (files: FileList | null) => {
     if (!files) return;
     
-    const newDocuments: Document[] = [];
+    const newDocuments: CaseDocument[] = [];
     
     // Add all files to state first
     Array.from(files).forEach((file, index) => {
-      const newDoc: Document = {
+      const newDoc: CaseDocument = {
         id: Date.now() + index, // Use timestamp to ensure unique IDs
         name: file.name,
         size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
@@ -295,7 +295,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
     handleFileUpload(files);
   };
 
-  const getStatusBadge = (doc: Document) => {
+  const getStatusBadge = (doc: CaseDocument) => {
     const error = uploadErrors[doc.id];
     
     if (error) {
@@ -336,7 +336,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ documents, setDocuments
   };
 
   return (
-    <Card className="backdrop-blur-sm bg-white/80 border-white/20 shadow-2xl relative overflow-hidden">
+    <Card className="backdrop-blur-sm bg-white/90 border-white/30 shadow-xl relative overflow-hidden hover:shadow-2xl transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent pointer-events-none" />
       <CardHeader className="relative z-10">
         <CardTitle className="flex items-center text-slate-800">

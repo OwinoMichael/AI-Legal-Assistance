@@ -19,11 +19,22 @@ public class DocumentAnalysis {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    @Column(name = "confidence_score")
     private Double confidenceScore;
+
+    @Column(name = "risk_count")
     private Integer riskCount;
+
+    @Column(name = "clause_count")
     private Integer clauseCount;
+
+    @Column(name = "keyterm_count")
     private Integer keyTermCount;
+
+    @Column(name = "action_item_count")
     private Integer actionItemCount;
+
+    @Column(name = "financial_item_count")
     private Integer financialItemCount;
 
     @Column(columnDefinition = "TEXT")

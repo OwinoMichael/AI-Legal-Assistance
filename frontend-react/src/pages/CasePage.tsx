@@ -8,6 +8,7 @@ import AnalysisResults from '@/components/CasePageComponents/AnalysisResults';
 import ChatSidebar from '@/components/CasePageComponents/ChatSidebar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import DocumentAnalysisMetricsCard from '@/components/CasePageComponents/DocMetricCard';
 
 const CaseDetailPage: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -45,6 +46,7 @@ const CaseDetailPage: React.FC = () => {
       
       try {
         const response = await axios.get(`http://localhost:8080/documents/case/${id}`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const serverDocuments = response.data.map((doc: any) => ({
           id: Date.now() + doc.id, // Create unique client-side ID
           serverId: doc.id, // Store server ID
@@ -103,6 +105,19 @@ const CaseDetailPage: React.FC = () => {
     recommendations: [
       "Consider negotiating the non-compete clause to reduce the time period from 18 to 12 months",
     ]
+  };
+
+  // Mock metrics data for the DocumentAnalysisMetricsCard
+  const mockMetrics = {
+    id: 1,
+    documentId: parseInt(id || '1'),
+    summary: "Employment contract analysis reveals competitive compensation structure with standard benefits. Key areas of concern include broad non-compete terms and intellectual property clauses that may require negotiation.",
+    confidenceScore: 87,
+    riskCount: 3,
+    clauseCount: 12,
+    keyTermCount: 8,
+    actionItemCount: 5,
+    financialItemCount: 4
   };
 
   // Show loading state while fetching data
@@ -175,6 +190,11 @@ const CaseDetailPage: React.FC = () => {
               setDocuments={setDocuments}
               caseId={id!} // Pass the case ID
             />
+            
+            {/* Add the DocumentAnalysisMetricsCard when documents are analyzed */}
+            {documents.some(doc => doc.status === "analyzed") && (
+              <DocumentAnalysisMetricsCard metrics={mockMetrics} />
+            )}
             
             {documents.some(doc => doc.status === "analyzed") && (
               <AnalysisResults analysisData={analysisData} />

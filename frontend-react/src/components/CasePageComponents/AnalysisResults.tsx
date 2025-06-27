@@ -16,7 +16,6 @@ import {
   DollarSign,
   BookOpenCheck,
   Clock,
-  Target,
   Flag
 } from 'lucide-react';
 
@@ -144,88 +143,88 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysisData }) => {
   };
 
   return (
-    <Card className="backdrop-blur-sm bg-white/80 border-white/20 shadow-2xl relative overflow-hidden">
+    <Card className="flex-1 backdrop-blur-sm bg-white/90 border-white/30 shadow-xl relative overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col">
       <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent pointer-events-none" />
-      <CardHeader className="relative z-10">
+      <CardHeader className="relative z-10 pb-4 flex-shrink-0">
         <CardTitle className="flex items-center text-slate-800">
           <Bot className="w-5 h-5 mr-2" />
           AI Analysis Results
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative z-10">
-        <Tabs defaultValue="summary" className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-white/50 backdrop-blur-sm border border-white/20 text-xs">
-            <TabsTrigger value="summary" className="flex items-center data-[state=active]:bg-white/80">
+      <CardContent className="relative z-10 pt-0 flex-1 flex flex-col ">
+        <Tabs defaultValue="summary" className="w-full flex-1 flex flex-col">
+          <TabsList className="grid w-full grid-cols-7 bg-white/60 backdrop-blur-sm border border-white/30 text-xs h-12 flex-shrink-0">
+            <TabsTrigger value="summary" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <BookOpen className="w-3 h-3 mr-1" />
-              Summary
+              <span className="hidden sm:inline">Summary</span>
             </TabsTrigger>
-            <TabsTrigger value="risks" className="flex items-center data-[state=active]:bg-white/80">
+            <TabsTrigger value="risks" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <AlertTriangle className="w-3 h-3 mr-1" />
-              Risks
+              <span className="hidden sm:inline">Risks</span>
             </TabsTrigger>
-            <TabsTrigger value="clauses" className="flex items-center data-[state=active]:bg-white/80">
+            <TabsTrigger value="clauses" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <Scale className="w-3 h-3 mr-1" />
-              Clauses
+              <span className="hidden sm:inline">Clauses</span>
             </TabsTrigger>
-            <TabsTrigger value="terms" className="flex items-center data-[state=active]:bg-white/80">
+            <TabsTrigger value="terms" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <BookOpenCheck className="w-3 h-3 mr-1" />
-              Key Terms
+              <span className="hidden sm:inline">Terms</span>
             </TabsTrigger>
-            <TabsTrigger value="actions" className="flex items-center data-[state=active]:bg-white/80">
+            <TabsTrigger value="actions" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <CheckSquare className="w-3 h-3 mr-1" />
-              Actions
+              <span className="hidden sm:inline">Actions</span>
             </TabsTrigger>
-            <TabsTrigger value="financial" className="flex items-center data-[state=active]:bg-white/80">
+            <TabsTrigger value="financial" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <DollarSign className="w-3 h-3 mr-1" />
-              Financial
+              <span className="hidden sm:inline">Financial</span>
             </TabsTrigger>
-            <TabsTrigger value="recommendations" className="flex items-center data-[state=active]:bg-white/80">
+            <TabsTrigger value="recommendations" className="flex items-center data-[state=active]:bg-white/90 data-[state=active]:shadow-sm transition-all duration-200">
               <Lightbulb className="w-3 h-3 mr-1" />
-              Tips
+              <span className="hidden sm:inline">Tips</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="summary" className="mt-4">
-            <div className="prose max-w-none p-4 bg-white/30 backdrop-blur-sm rounded-xl border border-white/20">
-              <p className="text-slate-700 leading-relaxed">{analysisData.summary}</p>
-            </div>
-          </TabsContent>
+          <div className="mt-4 flex-1 overflow-auto">
+            <TabsContent value="summary" className="mt-0">
+              <div className="prose max-w-none p-4 bg-white/40 backdrop-blur-sm rounded-xl border border-white/30 hover:bg-white/50 transition-all duration-300">
+                <p className="text-slate-700 leading-relaxed m-0">{analysisData.summary}</p>
+              </div>
+            </TabsContent>
 
-          <TabsContent value="risks" className="mt-4">
-            <div className="space-y-4">
-              {analysisData.risks.map((risk, index) => (
-                <Alert key={index} className={getRiskColor(risk.level)}>
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    <div className="font-medium mb-1">{risk.title}</div>
-                    <div className="text-sm">{risk.description}</div>
-                  </AlertDescription>
-                </Alert>
-              ))}
-            </div>
-          </TabsContent>
+            <TabsContent value="risks" className="mt-0">
+              <div className="space-y-3 h-full overflow-auto">
+                {analysisData.risks.map((risk, index) => (
+                  <Alert key={index} className={`${getRiskColor(risk.level)} hover:scale-[1.01] transition-all duration-200`}>
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>
+                      <div className="font-medium mb-1">{risk.title}</div>
+                      <div className="text-sm">{risk.description}</div>
+                    </AlertDescription>
+                  </Alert>
+                ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="clauses" className="mt-4">
-            <div className="space-y-4">
-              {analysisData.clauses.map((clause, index) => (
-                <div key={index} className="border border-white/20 rounded-xl p-4 bg-white/30 backdrop-blur-sm hover:bg-white/50 transition-all duration-200">
-                  <div className="flex items-center mb-2">
-                    {getClauseIcon(clause.type)}
-                    <h4 className="font-medium ml-2 text-slate-800">{clause.title}</h4>
+            <TabsContent value="clauses" className="mt-0">
+              <div className="space-y-3 h-full overflow-auto">
+                {analysisData.clauses.map((clause, index) => (
+                  <div key={index} className="border border-white/30 rounded-xl p-4 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:scale-[1.01] transition-all duration-300">
+                    <div className="flex items-center mb-3">
+                      {getClauseIcon(clause.type)}
+                      <h4 className="font-medium ml-2 text-slate-800">{clause.title}</h4>
+                    </div>
+                    <p className="text-slate-700 mb-3 leading-relaxed">{clause.content}</p>
+                    <p className="text-sm text-slate-600 italic">{clause.significance}</p>
                   </div>
-                  <p className="text-slate-700 mb-2">{clause.content}</p>
-                  <p className="text-sm text-slate-600 italic">{clause.significance}</p>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
+                ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="terms" className="mt-4">
-            <div className="space-y-4">
-              <div className="grid gap-4">
+            <TabsContent value="terms" className="mt-0">
+              <div className="space-y-3 h-full overflow-auto">
                 {analysisData.keyTerms.map((term, index) => (
-                  <div key={index} className="border border-white/20 rounded-xl p-4 bg-white/30 backdrop-blur-sm hover:bg-white/50 transition-all duration-200">
-                    <div className="flex items-start justify-between mb-2">
+                  <div key={index} className="border border-white/30 rounded-xl p-4 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:scale-[1.01] transition-all duration-300">
+                    <div className="flex items-start justify-between mb-3">
                       <h4 className="font-semibold text-slate-800">{term.term}</h4>
                       <Badge className={getCategoryColor(term.category)}>
                         {term.category}
@@ -235,63 +234,61 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysisData }) => {
                   </div>
                 ))}
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="actions" className="mt-4">
-            <div className="space-y-4">
-              {analysisData.actionItems.map((action) => (
-                <div key={action.id} className="border border-white/20 rounded-xl p-4 bg-white/30 backdrop-blur-sm hover:bg-white/50 transition-all duration-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                      <CheckSquare className="w-4 h-4 text-slate-600" />
-                      <h4 className="font-medium text-slate-800">{action.task}</h4>
+            <TabsContent value="actions" className="mt-0">
+              <div className="space-y-3 h-full overflow-auto">
+                {analysisData.actionItems.map((action) => (
+                  <div key={action.id} className="border border-white/30 rounded-xl p-4 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:scale-[1.01] transition-all duration-300">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <CheckSquare className="w-4 h-4 text-slate-600" />
+                        <h4 className="font-medium text-slate-800">{action.task}</h4>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Badge className={getPriorityColor(action.priority)}>
+                          {action.priority}
+                        </Badge>
+                        <Badge className={getStatusColor(action.status)}>
+                          {action.status}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <Badge className={getPriorityColor(action.priority)}>
-                        {action.priority}
-                      </Badge>
-                      <Badge className={getStatusColor(action.status)}>
-                        {action.status}
-                      </Badge>
+                    
+                    <div className="flex items-center space-x-4 text-sm text-slate-600 mb-3">
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-4 h-4" />
+                        <span className={isOverdue(action.deadline) ? 'text-red-600 font-medium' : ''}>
+                          Due: {formatDate(action.deadline)}
+                        </span>
+                      </div>
+                      {isOverdue(action.deadline) && action.status === 'pending' && (
+                        <Badge className="bg-red-100 text-red-800">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Overdue
+                        </Badge>
+                      )}
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-slate-600 mb-2">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4" />
-                      <span className={isOverdue(action.deadline) ? 'text-red-600 font-medium' : ''}>
-                        Due: {formatDate(action.deadline)}
-                      </span>
-                    </div>
-                    {isOverdue(action.deadline) && action.status === 'pending' && (
-                      <Badge className="bg-red-100 text-red-800">
-                        <Clock className="w-3 h-3 mr-1" />
-                        Overdue
-                      </Badge>
+                    
+                    {action.description && (
+                      <p className="text-slate-700 text-sm leading-relaxed">{action.description}</p>
                     )}
                   </div>
-                  
-                  {action.description && (
-                    <p className="text-slate-700 text-sm">{action.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </TabsContent>
+                ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="financial" className="mt-4">
-            <div className="space-y-4">
-              <div className="grid gap-4">
+            <TabsContent value="financial" className="mt-0">
+              <div className="space-y-3 h-full overflow-auto">
                 {analysisData.financialImpact.map((item, index) => (
-                  <div key={index} className="border border-white/20 rounded-xl p-4 bg-white/30 backdrop-blur-sm hover:bg-white/50 transition-all duration-200">
-                    <div className="flex items-start justify-between mb-2">
+                  <div key={index} className="border border-white/30 rounded-xl p-4 bg-white/40 backdrop-blur-sm hover:bg-white/60 hover:scale-[1.01] transition-all duration-300">
+                    <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center space-x-2">
                         <DollarSign className={`w-4 h-4 ${getFinancialTypeColor(item.type)}`} />
                         <h4 className="font-medium text-slate-800 capitalize">{item.type}</h4>
                       </div>
                       <div className="text-right">
-                        <div className={`font-semibold ${getFinancialTypeColor(item.type)}`}>
+                        <div className={`font-semibold text-lg ${getFinancialTypeColor(item.type)}`}>
                           {item.amount}
                         </div>
                         {item.frequency && (
@@ -302,7 +299,7 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysisData }) => {
                       </div>
                     </div>
                     
-                    <p className="text-slate-700 text-sm mb-2">{item.description}</p>
+                    <p className="text-slate-700 text-sm mb-3 leading-relaxed">{item.description}</p>
                     
                     {item.dueDate && (
                       <div className="flex items-center space-x-1 text-xs text-slate-600">
@@ -313,19 +310,19 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysisData }) => {
                   </div>
                 ))}
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="recommendations" className="mt-4">
-            <div className="space-y-3">
-              {analysisData.recommendations.map((recommendation, index) => (
-                <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50/50 backdrop-blur-sm rounded-xl border border-blue-200/30 hover:bg-blue-50/70 transition-all duration-200">
-                  <Lightbulb className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <p className="text-slate-700">{recommendation}</p>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
+            <TabsContent value="recommendations" className="mt-0">
+              <div className="space-y-3 h-full overflow-auto">
+                {analysisData.recommendations.map((recommendation, index) => (
+                  <div key={index} className="flex items-start space-x-3 p-4 bg-blue-50/60 backdrop-blur-sm rounded-xl border border-blue-200/40 hover:bg-blue-50/80 hover:scale-[1.01] transition-all duration-300">
+                    <Lightbulb className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-slate-700 leading-relaxed">{recommendation}</p>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+          </div>
         </Tabs>
       </CardContent>
     </Card>
@@ -466,10 +463,8 @@ const mockAnalysisData: EnhancedAnalysisData = {
 // Export the component with mock data
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-indigo-100 p-8">
-      <div className="max-w-6xl mx-auto">
-        <AnalysisResults analysisData={mockAnalysisData} />
-      </div>
+    <div className="h-screen bg-gradient-to-br from-slate-100 via-white to-indigo-100 flex">
+      <AnalysisResults analysisData={mockAnalysisData} />
     </div>
   );
 }

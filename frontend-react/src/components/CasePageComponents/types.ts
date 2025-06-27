@@ -1,11 +1,11 @@
-export interface Document {
-  id: number;
-  name: string;
-  size: string;
-  uploadDate: string;
-  status: "uploading" | "analyzing" | "analyzed";
-  analysisProgress: number;
-}
+// export interface CaseDocument {
+//   id: number;
+//   name: string;
+//   size: string;
+//   uploadDate: string;
+//   status: "uploading" | "analyzing" | "analyzed";
+//   analysisProgress: number;
+// }
 
 export interface ChatMessage {
   id: number;
@@ -59,7 +59,7 @@ export interface AnalysisData {
 }
 
 // Updated Document interface
-export interface Document {
+export interface CaseDocument {
   id: number;
   serverId?: number; // Add this to store the server-side document ID
   name: string;
