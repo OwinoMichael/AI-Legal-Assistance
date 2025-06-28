@@ -15,13 +15,21 @@ public class Risk {
     @JsonProperty("confidence")
     private Double confidence;
 
+    @JsonProperty("category")
+    private String category;
+
+    @JsonProperty("severity_score")
+    private Double severity_score;
+
     public Risk() {}
 
-    public Risk(String level, String title, String description, Double confidence) {
+    public Risk(String level, String title, String description, Double confidence, String category, Double severity_score) {
         this.level = level;
         this.title = title;
         this.description = description;
         this.confidence = confidence;
+        this.category = category;
+        this.severity_score = severity_score;
     }
 
     // Getters and Setters
@@ -37,6 +45,22 @@ public class Risk {
     public Double getConfidence() { return confidence; }
     public void setConfidence(Double confidence) { this.confidence = confidence; }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Double getSeverity_score() {
+        return severity_score;
+    }
+
+    public void setSeverity_score(Double severity_score) {
+        this.severity_score = severity_score;
+    }
+
     @Override
     public String toString() {
         return "Risk{" +
@@ -44,6 +68,8 @@ public class Risk {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", confidence=" + confidence +
+                ", category='" + category + '\'' +
+                ", severity_score=" + severity_score +
                 '}';
     }
 }

@@ -25,15 +25,15 @@ public class ComprehensiveAnalysis {
     @JsonProperty("recommendations")
     private List<String> recommendations;
 
+    @JsonProperty("compliance_item")
+    private List<ComplianceItem> complianceItems;
+
     @JsonProperty("confidence_score")
     private Double confidenceScore;
 
     public ComprehensiveAnalysis() {}
 
-    public ComprehensiveAnalysis(String summary, List<Risk> risks, List<Clause> clauses,
-                                 List<KeyTerm> keyTerms, List<ActionItem> actionItems,
-                                 List<FinancialItem> financialImpact, List<String> recommendations,
-                                 Double confidenceScore) {
+    public ComprehensiveAnalysis(String summary, List<Risk> risks, List<Clause> clauses, List<KeyTerm> keyTerms, List<ActionItem> actionItems, List<FinancialItem> financialImpact, List<String> recommendations, List<ComplianceItem> complianceItems, Double confidenceScore) {
         this.summary = summary;
         this.risks = risks;
         this.clauses = clauses;
@@ -41,6 +41,7 @@ public class ComprehensiveAnalysis {
         this.actionItems = actionItems;
         this.financialImpact = financialImpact;
         this.recommendations = recommendations;
+        this.complianceItems = complianceItems;
         this.confidenceScore = confidenceScore;
     }
 
@@ -69,6 +70,14 @@ public class ComprehensiveAnalysis {
     public Double getConfidenceScore() { return confidenceScore; }
     public void setConfidenceScore(Double confidenceScore) { this.confidenceScore = confidenceScore; }
 
+    public List<ComplianceItem> getComplianceItems() {
+        return complianceItems;
+    }
+
+    public void setComplianceItems(List<ComplianceItem> complianceItems) {
+        this.complianceItems = complianceItems;
+    }
+
     @Override
     public String toString() {
         return "ComprehensiveAnalysis{" +
@@ -79,6 +88,7 @@ public class ComprehensiveAnalysis {
                 ", actionItems=" + actionItems +
                 ", financialImpact=" + financialImpact +
                 ", recommendations=" + recommendations +
+                ", complianceItems=" + complianceItems +
                 ", confidenceScore=" + confidenceScore +
                 '}';
     }

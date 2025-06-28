@@ -21,15 +21,19 @@ public class ActionItem {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("assigned_to")
+    private String assignedTo;
+
     public ActionItem() {}
 
-    public ActionItem(String id, String task, String deadline, String priority, String status, String description) {
+    public ActionItem(String id, String task, String deadline, String priority, String status, String description, String assignedTo) {
         this.id = id;
         this.task = task;
         this.deadline = deadline;
         this.priority = priority;
         this.status = status;
         this.description = description;
+        this.assignedTo = assignedTo;
     }
 
     // Getters and Setters
@@ -51,6 +55,14 @@ public class ActionItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
     @Override
     public String toString() {
         return "ActionItem{" +
@@ -60,6 +72,7 @@ public class ActionItem {
                 ", priority='" + priority + '\'' +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
+                ", assignedTo='" + assignedTo + '\'' +
                 '}';
     }
 }

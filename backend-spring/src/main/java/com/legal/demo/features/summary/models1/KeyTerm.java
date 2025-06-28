@@ -15,13 +15,17 @@ public class KeyTerm {
     @JsonProperty("context")
     private String context;
 
+    @JsonProperty("importance")
+    private String importance;
+
     public KeyTerm() {}
 
-    public KeyTerm(String term, String definition, String category, String context) {
+    public KeyTerm(String term, String definition, String category, String context, String importance) {
         this.term = term;
         this.definition = definition;
         this.category = category;
         this.context = context;
+        this.importance = importance;
     }
 
     // Getters and Setters
@@ -37,6 +41,14 @@ public class KeyTerm {
     public String getContext() { return context; }
     public void setContext(String context) { this.context = context; }
 
+    public String getImportance() {
+        return importance;
+    }
+
+    public void setImportance(String importance) {
+        this.importance = importance;
+    }
+
     @Override
     public String toString() {
         return "KeyTerm{" +
@@ -44,6 +56,7 @@ public class KeyTerm {
                 ", definition='" + definition + '\'' +
                 ", category='" + category + '\'' +
                 ", context='" + context + '\'' +
+                ", importance='" + importance + '\'' +
                 '}';
     }
 }

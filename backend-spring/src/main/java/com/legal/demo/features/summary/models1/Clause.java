@@ -2,6 +2,8 @@ package com.legal.demo.features.summary.models1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class Clause {
     @JsonProperty("type")
     private String type;
@@ -18,14 +20,18 @@ public class Clause {
     @JsonProperty("location")
     private Integer location;
 
+    @JsonProperty("key_points")
+    private List<String> keyPoints;
+
     public Clause() {}
 
-    public Clause(String type, String title, String content, String significance, Integer location) {
+    public Clause(String type, String title, String content, String significance, Integer location, List<String> keyPoints) {
         this.type = type;
         this.title = title;
         this.content = content;
         this.significance = significance;
         this.location = location;
+        this.keyPoints = keyPoints;
     }
 
     // Getters and Setters
@@ -44,6 +50,14 @@ public class Clause {
     public Integer getLocation() { return location; }
     public void setLocation(Integer location) { this.location = location; }
 
+    public List<String> getKeyPoints() {
+        return keyPoints;
+    }
+
+    public void setKeyPoints(List<String> keyPoints) {
+        this.keyPoints = keyPoints;
+    }
+
     @Override
     public String toString() {
         return "Clause{" +
@@ -52,6 +66,7 @@ public class Clause {
                 ", content='" + content + '\'' +
                 ", significance='" + significance + '\'' +
                 ", location=" + location +
+                ", keyPoints=" + keyPoints +
                 '}';
     }
 }
