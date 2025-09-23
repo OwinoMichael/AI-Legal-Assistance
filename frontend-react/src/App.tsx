@@ -47,6 +47,10 @@ const ProtectedRoute = () => {
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  // Add this temporarily to your main App component for debugging
+  console.log('Current pathname:', window.location.pathname);
+  console.log('Current basename:', '/legallens');
+
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     setIsAuthenticated(!!user);
