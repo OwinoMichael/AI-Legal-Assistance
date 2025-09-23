@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db:
+    image: ankane/pgvector
+    container_name: pg-db
+    ports:
+      - "5433:5432"  # Changed to avoid conflict with local PostgreSQL
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME:-legal}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  fastapi:
+    build:
+      context: ./AI-python
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  spring:
+    build:
+      context: ./backend-spring
+    container_name: springboot-app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  react:
+    build:
+      context: ./frontend-react
+    container_name: react-app
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+
+networks:
+  app-network:
+    driver: bridge
