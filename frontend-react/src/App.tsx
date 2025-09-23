@@ -73,32 +73,36 @@ function App() {
   };
 
   const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
-        {/* ✅ Protected routes grouped under <ProtectedRoute> */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/cases/:id" element={<CaseDetailPage />} />
-          <Route path="/cases-export" element={<LegalPDFExport />} />
-        </Route>
+  createRoutesFromElements(
+    <>
+      {/* ✅ Protected routes grouped under <ProtectedRoute> */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/legallens/home" element={<HomePage />} />
+        <Route path="/legallens/cases/:id" element={<CaseDetailPage />} />
+        <Route path="/legallens/cases-export" element={<LegalPDFExport />} />
+      </Route>
 
-        {/* Public routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/unverified-email" element={<UnverifiedPage />} />
-        <Route path="/verify-error" element={<EmailVerifyErrorPage />} />
-        <Route path="/verify-success" element={<EmailVerifySuccessPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </>
-    )
-  );
+      {/* Public routes */}
+      <Route path="/legallens" element={<LandingPage />} />
+      <Route path="/legallens/" element={<LandingPage />} />
+      <Route path="/legallens/login" element={<LoginPage />} />
+      <Route path="/legallens/signup" element={<SignupPage />} />
+      <Route path="/legallens/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/legallens/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/legallens/unverified-email" element={<UnverifiedPage />} />
+      <Route path="/legallens/verify-error" element={<EmailVerifyErrorPage />} />
+      <Route path="/legallens/verify-success" element={<EmailVerifySuccessPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </>
+  ),
+  {
+    basename: "/legallens" // This tells React Router the base path
+  }
+);
 
-  return( 
-    <><RouterProvider router={router} /><Toaster /></>
-  );
+return( 
+  <><RouterProvider router={router} /><Toaster /></>
+);
 }
 
 
