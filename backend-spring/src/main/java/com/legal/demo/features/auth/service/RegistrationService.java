@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -52,6 +53,7 @@ public class RegistrationService implements Command<UserRegistrationRequest, T> 
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setEmail(request.getEmail());
+            user.setCases(new ArrayList<>());
             user.setPassword(encoder.encode(request.getPassword()));
             user.setEnabled(false);
 

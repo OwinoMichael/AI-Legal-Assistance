@@ -2,7 +2,6 @@ package com.legal.demo.features.documentupload.commandhandler;
 
 import com.legal.demo.Command;
 import com.legal.demo.application.exceptions.FileStorageException;
-import com.legal.demo.application.exceptions.GlobalExceptionHandler;
 import com.legal.demo.application.exceptions.ResourceNotFoundException;
 import com.legal.demo.domain.legalcase.Case;
 import com.legal.demo.domain.legalcase.Document;
@@ -11,7 +10,7 @@ import com.legal.demo.features.documentupload.DocumentDTO.DocumentResponseDTO;
 import com.legal.demo.features.documentupload.DocumentDTO.DocumentUploadDTO;
 import com.legal.demo.features.documentupload.DocumentRepository;
 
-import com.legal.demo.features.summary.commandhandler.SummaryAsyncService;
+import com.legal.demo.features.analysis.commandhandler.AnalysisAsyncService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,12 +24,12 @@ public class UploadDocument implements Command<DocumentUploadDTO, DocumentRespon
     private final CaseRepository caseRepository;
     private final FileStorageService fileStorageService;
 
-    private final SummaryAsyncService summaryService;
+    private final AnalysisAsyncService summaryService;
 
     public UploadDocument(DocumentRepository documentRepository,
                           CaseRepository caseRepository,
                           FileStorageService fileStorageService,
-                          SummaryAsyncService summaryService) {
+                          AnalysisAsyncService summaryService) {
         this.documentRepository = documentRepository;
         this.caseRepository = caseRepository;
         this.fileStorageService = fileStorageService;

@@ -32,9 +32,10 @@ public class Case {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
 
     @OneToMany(mappedBy = "legalCase", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Document> documents;

@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 const UnverifiedPage = () => {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const user = AuthService.getCurrentUser();scroll
+  const user = AuthService.getCurrentUser();
+  console.log("UnverifiedPage -> user:", user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,11 +45,14 @@ const UnverifiedPage = () => {
       <Terminal className="h-4 w-4" />
       <AlertTitle>Verify your email!</AlertTitle>
       <AlertDescription>
-        We have sent an email to <strong>{user.email}</strong> to verify your email
+        We have sent an email to{" "}
+        <strong>{user ? user.email : "your email"}</strong> to verify your email
         address and activate your account.
         <br />
-        Click below if you did not receive an email or want us to resend the verification email.
+        Click below if you did not receive an email or want us to resend the
+        verification email.
       </AlertDescription>
+
 
       <Button
         onClick={handleResend}

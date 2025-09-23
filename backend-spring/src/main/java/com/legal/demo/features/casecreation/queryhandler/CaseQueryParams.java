@@ -16,6 +16,7 @@ public class CaseQueryParams {
 
     private Sort.Direction sortDirection = Sort.Direction.DESC;
 
+
     public CaseQueryParams() {
     }
 
@@ -57,4 +58,8 @@ public class CaseQueryParams {
     public void setSortDirection(Sort.Direction sortDirection) {
         this.sortDirection = sortDirection;
     }
+
+
+
+
 }

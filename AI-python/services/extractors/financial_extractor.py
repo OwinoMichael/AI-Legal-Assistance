@@ -13,50 +13,92 @@ class FinancialExtractor:
         # Currency patterns
         self.currency_patterns = {
             'usd': [
-                r'\$[\d,]+(?:\.\d{2})?',
-                r'USD\s*[\d,]+(?:\.\d{2})?',
-                r'dollars?\s*[\d,]+(?:\.\d{2})?',
-                r'[\d,]+(?:\.\d{2})?\s*dollars?'
+                r'\$[\d,.]+',                           # $5,000 or $5000
+                r'USD\s*[\d,.]+',
+                r'US\s*dollars?\s*[\d,.]+',
+                r'[\d,.]+\s*US\s*dollars?'
             ],
             'eur': [
-                r'€[\d,]+(?:\.\d{2})?',
-                r'EUR\s*[\d,]+(?:\.\d{2})?',
-                r'euros?\s*[\d,]+(?:\.\d{2})?'
+                r'€[\d,.]+',
+                r'EUR\s*[\d,.]+',
+                r'euros?\s*[\d,.]+',
+                r'[\d,.]+\s*euros?'
             ],
             'gbp': [
-                r'£[\d,]+(?:\.\d{2})?',
-                r'GBP\s*[\d,]+(?:\.\d{2})?',
-                r'pounds?\s*[\d,]+(?:\.\d{2})?'
+                r'£[\d,.]+',
+                r'GBP\s*[\d,.]+',
+                r'pounds?\s*sterling\s*[\d,.]+',
+                r'[\d,.]+\s*pounds?\s*sterling'
+            ],
+            'cad': [
+                r'CAD\s*[\d,.]+',
+                r'C\$[\d,.]+',
+                r'Canadian\s*dollars?\s*[\d,.]+',
+                r'[\d,.]+\s*Canadian\s*dollars?'
+            ],
+            'aud': [
+                r'AUD\s*[\d,.]+',
+                r'A\$[\d,.]+',
+                r'Australian\s*dollars?\s*[\d,.]+',
+                r'[\d,.]+\s*Australian\s*dollars?'
+            ],
+            'inr': [
+                r'₹[\d,.]+',
+                r'INR\s*[\d,.]+',
+                r'rupees?\s*[\d,.]+',
+                r'[\d,.]+\s*rupees?'
+            ],
+            'jpy': [
+                r'¥[\d,.]+',
+                r'JPY\s*[\d,.]+',
+                r'yen\s*[\d,.]+',
+                r'[\d,.]+\s*yen'
             ]
         }
         
         # Financial term patterns
         self.financial_terms = {
             'salary': [
-                r'salary.*?\$?[\d,]+(?:\.\d{2})?',
-                r'annual.*?compensation.*?\$?[\d,]+(?:\.\d{2})?',
-                r'base.*?pay.*?\$?[\d,]+(?:\.\d{2})?'
+                r'salary.*?\$?[\d,.]+',
+                r'annual\s+salary.*?\$?[\d,.]+',
+                r'base\s+(?:pay|salary).*?\$?[\d,.]+',
+                r'compensation\s+package.*?\$?[\d,.]+',
+                r'gross\s+income.*?\$?[\d,.]+'
             ],
             'bonus': [
-                r'bonus.*?\$?[\d,]+(?:\.\d{2})?',
-                r'incentive.*?\$?[\d,]+(?:\.\d{2})?',
-                r'commission.*?\$?[\d,]+(?:\.\d{2})?'
+                r'bonus.*?\$?[\d,.]+',
+                r'signing\s+bonus.*?\$?[\d,.]+',
+                r'incentive.*?\$?[\d,.]+',
+                r'commission.*?\$?[\d,.]+',
+                r'performance\s+bonus.*?\$?[\d,.]+'
             ],
             'penalty': [
-                r'penalty.*?\$?[\d,]+(?:\.\d{2})?',
-                r'fine.*?\$?[\d,]+(?:\.\d{2})?',
-                r'liquidated.*?damages.*?\$?[\d,]+(?:\.\d{2})?'
+                r'penalt(?:y|ies).*?\$?[\d,.]+',
+                r'fine.*?\$?[\d,.]+',
+                r'liquidated\s+damages.*?\$?[\d,.]+',
+                r'breach\s+penalty.*?\$?[\d,.]+'
             ],
             'fee': [
-                r'fee.*?\$?[\d,]+(?:\.\d{2})?',
-                r'cost.*?\$?[\d,]+(?:\.\d{2})?',
-                r'charge.*?\$?[\d,]+(?:\.\d{2})?'
+                r'fee.*?\$?[\d,.]+',
+                r'service\s+charge.*?\$?[\d,.]+',
+                r'cost.*?\$?[\d,.]+',
+                r'charge.*?\$?[\d,.]+',
+                r'processing\s+fee.*?\$?[\d,.]+',
+                r'administration\s+fee.*?\$?[\d,.]+'
             ],
             'deposit': [
-                r'deposit.*?\$?[\d,]+(?:\.\d{2})?',
-                r'security.*?\$?[\d,]+(?:\.\d{2})?'
+                r'deposit.*?\$?[\d,.]+',
+                r'security\s+deposit.*?\$?[\d,.]+',
+                r'advance\s+payment.*?\$?[\d,.]+',
+                r'escrow\s+deposit.*?\$?[\d,.]+'
+            ],
+            'loan_amount': [
+                r'loan\s+amount.*?\$?[\d,.]+',
+                r'principal\s+sum.*?\$?[\d,.]+',
+                r'borrowed\s+sum.*?\$?[\d,.]+'
             ]
         }
+
     
     def extract_financial_information(self, text: str) -> List[FinancialItem]:
         """Extract all financial information from text"""
@@ -71,11 +113,33 @@ class FinancialExtractor:
         # Extract payment schedules
         financial_items.extend(self._extract_payment_schedules(text))
         
-        # Remove duplicates and sort by location
+        # Remove duplicates and sort by location (if available)
         financial_items = self._deduplicate_financial_items(financial_items)
-        financial_items.sort(key=lambda x: x.location or 0)
+        
+        # Sort by location if items have location attribute
+        try:
+            financial_items.sort(key=lambda x: getattr(x, 'location', 0))
+        except AttributeError:
+            # If location attribute doesn't exist, just keep original order
+            pass
         
         return financial_items
+    
+    def _create_financial_item(self, item_data: Dict, location: Optional[int] = None) -> FinancialItem:
+        """Helper method to create FinancialItem with or without location"""
+        try:
+            # Try to create with location first
+            if location is not None:
+                return FinancialItem(location=location, **item_data)
+            else:
+                return FinancialItem(**item_data)
+        except TypeError as e:
+            # If location field is not supported, create without it
+            if 'location' in str(e):
+                logger.debug("FinancialItem model doesn't support location field")
+                return FinancialItem(**item_data)
+            else:
+                raise e
     
     def _extract_currency_amounts(self, text: str) -> List[FinancialItem]:
         """Extract basic currency amounts"""
@@ -83,24 +147,29 @@ class FinancialExtractor:
         
         for currency, patterns in self.currency_patterns.items():
             for pattern in patterns:
-                matches = re.finditer(pattern, text, re.IGNORECASE)
-                for match in matches:
-                    amount = self._parse_amount(match.group())
-                    if amount:
-                        # Get context around the match
-                        start = max(0, match.start() - 50)
-                        end = min(len(text), match.end() + 50)
-                        context = text[start:end].strip()
-                        
-                        items.append(FinancialItem(
-                            type="amount",
-                            amount=amount,
-                            currency=currency.upper(),
-                            description=f"Currency amount: {match.group()}",
-                            context=context,
-                            location=match.start(),
-                            confidence=0.8
-                        ))
+                try:
+                    matches = re.finditer(pattern, text, re.IGNORECASE)
+                    for match in matches:
+                        amount = self._parse_amount(match.group())
+                        if amount is not None:
+                            # Get context around the match
+                            start = max(0, match.start() - 50)
+                            end = min(len(text), match.end() + 50)
+                            context = text[start:end].strip()
+                            
+                            item_data = {
+                                "type": "amount",
+                                "amount": str(amount),
+                                "currency": currency.upper(),
+                                "description": f"Currency amount: {match.group()}",
+                                "context": context,
+                                "confidence": 0.8
+                            }
+                            
+                            items.append(self._create_financial_item(item_data, match.start()))
+                except re.error as e:
+                    logger.warning(f"Invalid regex pattern '{pattern}': {e}")
+                    continue
         
         return items
     
@@ -110,27 +179,32 @@ class FinancialExtractor:
         
         for term_type, patterns in self.financial_terms.items():
             for pattern in patterns:
-                matches = re.finditer(pattern, text, re.IGNORECASE)
-                for match in matches:
-                    # Extract amount from the match
-                    amount_match = re.search(r'\$?[\d,]+(?:\.\d{2})?', match.group())
-                    if amount_match:
-                        amount = self._parse_amount(amount_match.group())
-                        if amount:
-                            # Get broader context
-                            start = max(0, match.start() - 100)
-                            end = min(len(text), match.end() + 100)
-                            context = text[start:end].strip()
-                            
-                            items.append(FinancialItem(
-                                type=term_type,
-                                amount=amount,
-                                currency="USD",  # Default to USD
-                                description=f"{term_type.title()}: {match.group()}",
-                                context=context,
-                                location=match.start(),
-                                confidence=0.9
-                            ))
+                try:
+                    matches = re.finditer(pattern, text, re.IGNORECASE)
+                    for match in matches:
+                        # Extract amount from the match
+                        amount_match = re.search(r'\$?[\d,]+(?:\.\d{2})?', match.group())
+                        if amount_match:
+                            amount = self._parse_amount(amount_match.group())
+                            if amount is not None:
+                                # Get broader context
+                                start = max(0, match.start() - 100)
+                                end = min(len(text), match.end() + 100)
+                                context = text[start:end].strip()
+                                
+                                item_data = {
+                                    "type": term_type,
+                                    "amount": str(amount),
+                                    "currency": "USD",
+                                    "description": f"{term_type.title()}: {match.group()}",
+                                    "context": context,
+                                    "confidence": 0.9
+                                }
+                                
+                                items.append(self._create_financial_item(item_data, match.start()))
+                except re.error as e:
+                    logger.warning(f"Invalid regex pattern '{pattern}': {e}")
+                    continue
         
         return items
     
@@ -146,36 +220,41 @@ class FinancialExtractor:
         ]
         
         for pattern in frequency_patterns:
-            matches = re.finditer(pattern, text, re.IGNORECASE)
-            for match in matches:
-                # Extract amount
-                amount_match = re.search(r'\$?[\d,]+(?:\.\d{2})?', match.group())
-                if amount_match:
-                    amount = self._parse_amount(amount_match.group())
-                    if amount:
-                        # Extract frequency
-                        frequency_match = re.search(
-                            r'(monthly|weekly|quarterly|annually|bi-weekly|biweekly)', 
-                            match.group(), 
-                            re.IGNORECASE
-                        )
-                        frequency = frequency_match.group().lower() if frequency_match else "unknown"
-                        
-                        # Get context
-                        start = max(0, match.start() - 100)
-                        end = min(len(text), match.end() + 100)
-                        context = text[start:end].strip()
-                        
-                        items.append(FinancialItem(
-                            type="payment_schedule",
-                            amount=amount,
-                            currency="USD",
-                            description=f"{frequency.title()} payment: {match.group()}",
-                            context=context,
-                            location=match.start(),
-                            confidence=0.85,
-                            metadata={"frequency": frequency}
-                        ))
+            try:
+                matches = re.finditer(pattern, text, re.IGNORECASE)
+                for match in matches:
+                    # Extract amount
+                    amount_match = re.search(r'\$?[\d,]+(?:\.\d{2})?', match.group())
+                    if amount_match:
+                        amount = self._parse_amount(amount_match.group())
+                        if amount is not None:
+                            # Extract frequency
+                            frequency_match = re.search(
+                                r'(monthly|weekly|quarterly|annually|bi-weekly|biweekly)', 
+                                match.group(), 
+                                re.IGNORECASE
+                            )
+                            frequency = frequency_match.group().lower() if frequency_match else "unknown"
+                            
+                            # Get context
+                            start = max(0, match.start() - 100)
+                            end = min(len(text), match.end() + 100)
+                            context = text[start:end].strip()
+                            
+                            item_data = {
+                                "type": "payment_schedule",
+                                "amount": str(amount),
+                                "currency": "USD",
+                                "description": f"{frequency.title()} payment: {match.group()}",
+                                "context": context,
+                                "confidence": 0.85,
+                                "metadata": {"frequency": frequency}
+                            }
+                            
+                            items.append(self._create_financial_item(item_data, match.start()))
+            except re.error as e:
+                logger.warning(f"Invalid regex pattern '{pattern}': {e}")
+                continue
         
         return items
     
@@ -196,16 +275,29 @@ class FinancialExtractor:
         if not items:
             return items
         
-        # Sort by location
-        items.sort(key=lambda x: x.location or 0)
+        # Sort by location if available
+        items.sort(key=lambda x: getattr(x, 'location', 0))
         
         deduplicated = []
         for item in items:
             # Check if we already have a similar item nearby
             is_duplicate = False
             for existing in deduplicated:
-                if (abs((item.location or 0) - (existing.location or 0)) < 50 and
-                    abs(item.amount - existing.amount) < 0.01 and
+                # Use getattr to safely access location attribute
+                item_location = getattr(item, 'location', 0)
+                existing_location = getattr(existing, 'location', 0)
+                location_diff = abs(item_location - existing_location)
+                
+                try:
+                    item_amount = float(item.amount)
+                    existing_amount = float(existing.amount)
+                    amount_diff = abs(item_amount - existing_amount)
+                except (ValueError, TypeError):
+                    # If amounts can't be compared, consider them different
+                    amount_diff = float('inf')
+                
+                if (location_diff < 50 and
+                    amount_diff < 0.01 and
                     item.currency == existing.currency):
                     is_duplicate = True
                     break
@@ -236,14 +328,20 @@ class FinancialExtractor:
             # Count by currency
             summary["by_currency"][item.currency] = summary["by_currency"].get(item.currency, 0) + 1
             
+            # Convert amount to float for calculations
+            try:
+                amount_float = float(item.amount)
+            except (ValueError, TypeError):
+                continue  # Skip invalid amounts
+            
             # Sum amounts by currency
             if item.currency not in summary["total_amounts"]:
                 summary["total_amounts"][item.currency] = 0
-            summary["total_amounts"][item.currency] += item.amount
+            summary["total_amounts"][item.currency] += amount_float
             
             # Track highest and lowest amounts
-            summary["highest_amount"] = max(summary["highest_amount"], item.amount)
-            summary["lowest_amount"] = min(summary["lowest_amount"], item.amount)
+            summary["highest_amount"] = max(summary["highest_amount"], amount_float)
+            summary["lowest_amount"] = min(summary["lowest_amount"], amount_float)
         
         # Handle case where no amounts were found
         if summary["lowest_amount"] == float('inf'):

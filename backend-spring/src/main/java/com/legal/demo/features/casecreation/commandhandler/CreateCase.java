@@ -63,6 +63,10 @@ public class CreateCase implements Command<CaseDTO, CaseResponseDTO> {
             Case savedCase = caseRepository.save(newCase);
             logger.info("Case saved successfully with ID: {}", savedCase.getId());
 
+            user.getCases().add(savedCase);
+            userRepository.save(user);
+
+
             // Convert to response DTO
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(mapToResponseDTO(savedCase));

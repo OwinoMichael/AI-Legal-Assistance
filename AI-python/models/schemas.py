@@ -13,6 +13,9 @@ class DocumentAnalysisRequest(BaseModel):
         description="Type of document (employment, lease, service, etc.)"
     )
 
+class ChatRequest(BaseModel):
+    text: str = Field(..., description="Text to pass to Ollama")
+
 # Output schemas
 class Risk(BaseModel):
     level: str = Field(..., description="Risk level: high, medium, low")
@@ -73,6 +76,11 @@ class ComprehensiveAnalysis(BaseModel):
     recommendations: List[str] = Field(default_factory=list, description="Recommendations")
     confidence_score: float = Field(..., ge=0.0, le=1.0, description="Overall confidence")
     analysis_metadata: Optional[Dict] = Field(None, description="Analysis metadata")
+    table_count: int = Field(0)
+    has_tables: bool = Field(False)
+    invoice_tables_detected: int = Field(0)
+    has_invoice_tables: bool = Field(False)
+    table_summaries: List[str] = []
 
 class EmbedResponse(BaseModel):
     embedding: List[float] = Field(..., description="Text embedding vector")

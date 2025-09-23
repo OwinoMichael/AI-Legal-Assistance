@@ -31,6 +31,7 @@ public class Document {
     @Column(name = "file_type")
     private String fileType;
 
+    @Lob
     @Column(name = "summary")
     private String summary;
 

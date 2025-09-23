@@ -86,6 +86,17 @@ export function SignupForm({
           password.value
         );
 
+        // Store a minimal user object so UnverifiedPage can read it
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: email.value,
+            verified: false, // always false until email is verified
+            firstName: firstName.value,
+            lastName: lastName.value,
+          })
+        );
+
         navigate('/unverified-email');
     } catch (error) {
       console.error("Signup failed:", error);

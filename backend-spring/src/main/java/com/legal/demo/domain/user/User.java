@@ -1,5 +1,6 @@
 package com.legal.demo.domain.user;
 
+import com.legal.demo.domain.legalcase.Case;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -54,6 +57,11 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = false; // Default to false until verified
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Case> cases = new ArrayList<>();
+
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -65,13 +73,14 @@ public class User {
     public User() {
     }
 
-    public User(String id, String firstName, String lastName, String email, String password, boolean enabled, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String id, String firstName, String lastName, String email, String password, boolean enabled, List<Case> cases, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
+        this.cases = cases;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -142,26 +151,37 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public List<Case> getCases() {
+        return cases;
+    }
+
+    public void setCases(List<Case> cases) {
+        this.cases = cases;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return enabled == user.enabled && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(cases, user.cases) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, createdAt, updatedAt);
+        return Objects.hash(id, firstName, lastName, email, password, enabled, cases, createdAt, updatedAt);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", cases=" + cases +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
