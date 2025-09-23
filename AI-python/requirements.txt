@@ -1,0 +1,19 @@
+fastapi==0.104.1
+pdfplumber>=0.10.3 #OCR
+pytesseract>=0.3.10 #OCR
+Pillow>=10.0.0 
+uvicorn==0.24.0
+pydantic==2.5.0
+transformers==4.36.0
+sentence-transformers==2.3.1
+huggingface_hub==0.20.3
+pandas>=2.1.0,<2.2.0
+torch==2.1.0
+spacy==3.7.2
+python-multipart==0.0.6
+httpx==0.25.2
+pydantic-settings==2.2.1
+
+
+# Download spacy model after installation:
+# python -m spacy download en_core_web_sm

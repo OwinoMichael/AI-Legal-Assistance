@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem; /* Slightly increased for modern feel */
+    
+    /* Background colors matching your landing page */
+    --background: oklch(0.99 0.002 240); /* Very light blue-tinted white */
+    --foreground: oklch(0.15 0.008 240); /* Dark slate */
+    
+    /* Card colors with subtle blue tint */
+    --card: oklch(1 0 0); /* Pure white for cards */
+    --card-foreground: oklch(0.15 0.008 240);
+    
+    /* Popover colors */
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.15 0.008 240);
+    
+    /* Primary colors - blue to indigo gradient theme */
+    --primary: oklch(0.55 0.15 240); /* Blue-600 equivalent */
+    --primary-foreground: oklch(0.99 0 0); /* White */
+    
+    /* Secondary colors - light slate */
+    --secondary: oklch(0.96 0.004 240); /* Light slate with blue tint */
+    --secondary-foreground: oklch(0.15 0.008 240);
+    
+    /* Muted colors - matching your landing page grays */
+    --muted: oklch(0.96 0.004 240); /* Light slate */
+    --muted-foreground: oklch(0.45 0.008 240); /* Medium slate */
+    
+    /* Accent colors - indigo theme */
+    --accent: oklch(0.94 0.02 270); /* Light indigo */
+    --accent-foreground: oklch(0.15 0.008 240);
+    
+    /* Destructive (error) colors */
+    --destructive: oklch(0.577 0.245 27.325); /* Keep existing red */
+    --destructive-foreground: oklch(0.99 0 0);
+    
+    /* Border and input colors - subtle blue tint */
+    --border: oklch(0.89 0.008 240); /* Light slate border */
+    --input: oklch(0.89 0.008 240); /* Matching border */
+    --ring: oklch(0.55 0.15 240); /* Blue focus ring */
+    
+    /* Chart colors - blue/indigo theme */
+    --chart-1: oklch(0.55 0.15 240); /* Blue */
+    --chart-2: oklch(0.50 0.12 270); /* Indigo */
+    --chart-3: oklch(0.45 0.10 300); /* Purple */
+    --chart-4: oklch(0.60 0.12 210); /* Light blue */
+    --chart-5: oklch(0.40 0.08 330); /* Deep purple */
+    
+    /* Sidebar colors */
+    --sidebar: oklch(0.98 0.002 240);
+    --sidebar-foreground: oklch(0.15 0.008 240);
+    --sidebar-primary: oklch(0.55 0.15 240);
+    --sidebar-primary-foreground: oklch(0.99 0 0);
+    --sidebar-accent: oklch(0.96 0.004 240);
+    --sidebar-accent-foreground: oklch(0.15 0.008 240);
+    --sidebar-border: oklch(0.89 0.008 240);
+    --sidebar-ring: oklch(0.55 0.15 240);
+
+    /* Success colors for trust indicators */
+    --success: oklch(0.55 0.12 150); /* Green for checkmarks */
+    --success-foreground: oklch(0.99 0 0);
+    
+    /* Warning colors */
+    --warning: oklch(0.65 0.15 60); /* Amber for warnings */
+    --warning-foreground: oklch(0.15 0.008 240);
+
+    /* Force light theme */
+    color-scheme: light;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    /* Subtle blue tint to the base background */
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    /* Inherit the gradient background */
+    background: inherit;
+  }
+
+  /* Container styles */
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Enhanced typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: oklch(0.15 0.008 240);
+  }
+
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+
+  /* Enhanced link styles matching your theme */
+  a {
+    font-weight: 500;
+    color: oklch(0.55 0.15 240); /* Blue theme */
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  a:hover {
+    color: oklch(0.45 0.15 270); /* Indigo on hover */
+    text-decoration-color: currentColor;
+  }
+
+  /* Custom gradient utilities matching your landing page */
+  .bg-gradient-brand {
+    background: linear-gradient(135deg, 
+      oklch(0.55 0.15 240) 0%, 
+      oklch(0.50 0.12 270) 100%
+    );
+  }
+
+  .text-gradient-brand {
+    background: linear-gradient(135deg, 
+      oklch(0.55 0.15 240) 0%, 
+      oklch(0.50 0.12 270) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Glass morphism utilities */
+  .glass {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
