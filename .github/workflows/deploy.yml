@@ -1,4 +1,4 @@
-name: Deploy to Droplet
+name: Deploy LegalLens
 
 on:
   push:
@@ -9,17 +9,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Deploy on droplet
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DROPLET_IP }}
           username: root
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            cd ~/app
+
+            echo "Navigating to LegalLens project"
+            cd /root/projects/AI-Legal-Assistance
+
+            echo "Pulling latest code"
             git pull origin main
-            docker-compose -f docker-compose.prod.yml down
-            docker-compose -f docker-compose.prod.yml up -d --build
+
+            echo "Stopping existing containers"
+            docker compose -f docker-compose.prod.yml down
+
+            echo "Rebuilding and starting containers"
+            docker compose -f docker-compose.prod.yml up -d --build
+
+            echo "Cleaning unused docker images"
+            docker image prune -f
